@@ -4,10 +4,9 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: current_user
     }
-    result = RailsRelayTodoMVCSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = Schema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
 
@@ -29,5 +28,9 @@ class GraphqlController < ApplicationController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
+  end
+
+  def current_user
+    User.last
   end
 end
