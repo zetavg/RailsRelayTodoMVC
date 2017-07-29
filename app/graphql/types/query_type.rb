@@ -10,4 +10,6 @@ Types::QueryType = GraphQL::ObjectType.define do
       ctx[:current_user]
     }
   end
+
+  field :testInt, types.Int
 end

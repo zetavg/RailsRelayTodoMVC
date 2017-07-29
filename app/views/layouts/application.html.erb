@@ -6,6 +6,9 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script type="text/javascript">
+      window.GRAPHQL_URL = '<%= graphql_url %>'
+    </script>
     <%= javascript_pack_tag 'application' %>
   </head>
 

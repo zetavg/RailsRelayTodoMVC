@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+$stdout.sync = true
+
+APP_PATH = File.expand_path("../", __dir__)
+
+cmdline = ["yarn", "run", "relay", "--"] + ARGV
+
+Dir.chdir(APP_PATH) do
+  exec *cmdline
+end

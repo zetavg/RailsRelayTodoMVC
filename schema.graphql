@@ -25,6 +25,7 @@ type Query {
     # ID of the object.
     id: ID!
   ): Node
+  testInt: Int
   viewer: User
 }
 
