@@ -7,7 +7,12 @@ export default class TodoItem extends Component {
       completed: PropTypes.bool.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
+    onCompletedChangeValue: PropTypes.func.isRequired,
     onRemovePress: PropTypes.func.isRequired,
+  }
+
+  _handleToggleChange = (e) => {
+    this.props.onCompletedChangeValue(e.target.checked)
   }
 
   render() {
@@ -18,7 +23,12 @@ export default class TodoItem extends Component {
     return (
       <li className={todoItem.completed && 'completed'}>
         <div className="view">
-          <input className="toggle" type="checkbox" checked={todoItem.completed} readOnly />
+          <input
+            className="toggle"
+            type="checkbox"
+            onChange={this._handleToggleChange}
+            checked={todoItem.completed}
+          />
           <label>{todoItem.name}</label>
           <button
             className="destroy"
