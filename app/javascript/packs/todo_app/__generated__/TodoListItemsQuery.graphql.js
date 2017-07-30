@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9712470868d2d11d4d6eeda5bf9318a5
+ * @relayHash 0205359e462e503e239ab0d4eda681e5
  */
 
 /* eslint-disable */
@@ -54,8 +54,12 @@ fragment TodoListItems_todoList on TodoList {
 }
 
 fragment TodoItem_todoItem on TodoItem {
+  id
   completed
   name
+  todoList {
+    id
+  }
 }
 */
 
@@ -267,6 +271,24 @@ const batch /*: ConcreteBatch*/ = {
                             "storageKey": null
                           },
                           {
+                            "kind": "LinkedField",
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "TodoList",
+                            "name": "todoList",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "kind": "ScalarField",
+                                "alias": null,
+                                "args": null,
+                                "name": "id",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
                             "kind": "ScalarField",
                             "alias": null,
                             "args": null,
@@ -326,7 +348,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ]
   },
-  "text": "query TodoListItemsQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  completed\n  name\n}\n"
+  "text": "query TodoListItemsQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
 };
 
 module.exports = batch;
