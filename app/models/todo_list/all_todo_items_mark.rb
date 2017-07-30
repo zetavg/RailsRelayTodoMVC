@@ -7,10 +7,23 @@ class TodoList::AllTodoItemsMark < ActiveType::Object
   before_save :mark_all_todo_items
 
   delegate :todo_items, to: :todo_list, prefix: false, allow_nil: true
+  attr_reader :changed_todo_items
 
   private
 
   def mark_all_todo_items
-    todo_list.todo_items.update_all(completed: completed || false)
+    self.completed ||= false
+
+    if self.completed
+      todo_items = todo_list.todo_items.active
+      todo_item_ids = todo_items.ids
+      todo_items.update_all(completed: true)
+    else
+      todo_items = todo_list.todo_items.completed
+      todo_item_ids = todo_items.ids
+      todo_items.update_all(completed: false)
+    end
+
+    @changed_todo_items = todo_list.todo_items.where(id: todo_item_ids)
   end
 end

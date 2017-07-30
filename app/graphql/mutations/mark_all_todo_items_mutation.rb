@@ -15,7 +15,7 @@ Mutations::MarkAllTodoItemsMutation = GraphQL::Relay::Mutation.define do
     form.save!
 
     {
-      changedTodoItems: form.todo_items,
+      changedTodoItems: form.changed_todo_items,
       todoList: form.todo_list
     }
   }

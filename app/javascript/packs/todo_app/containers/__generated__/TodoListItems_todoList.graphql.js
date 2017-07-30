@@ -9,6 +9,9 @@
 /*::
 import type {ConcreteFragment} from 'relay-runtime';
 export type TodoListItems_todoList = {|
+  +id: string;
+  +todoItemsCount: ?number;
+  +completedTodoItemsCount: ?number;
   +todoItems: ?{|
     +pageInfo: {|
       +endCursor: ?string;
@@ -52,6 +55,27 @@ const fragment /*: ConcreteFragment*/ = {
   },
   "name": "TodoListItems_todoList",
   "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "args": null,
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "args": null,
+      "name": "todoItemsCount",
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "args": null,
+      "name": "completedTodoItemsCount",
+      "storageKey": null
+    },
     {
       "kind": "LinkedField",
       "alias": "todoItems",
