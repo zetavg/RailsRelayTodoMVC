@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+user = User.create!(name: 'User')
+todo_list = user.todo_lists.create!(name: 'My Todo List')
+TodoItem.create!(todo_list: todo_list, name: 'Taste JavaScript', completed: true)
+TodoItem.create!(todo_list: todo_list, name: 'Buy a unicorn')
