@@ -3,6 +3,8 @@ import {
   graphql,
 } from 'react-relay'
 import { ConnectionHandler } from 'relay-runtime'
+import PropTypes from 'prop-types'
+import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
 import Mutation from './Mutation'
 
 const mutation = graphql`
@@ -27,13 +29,15 @@ const mutation = graphql`
   }
 `
 
-const todoListTodoItemsConnectionNames = []
-
-export const registerTodoListTodoItemsConnectionName = name => todoListTodoItemsConnectionNames.push(name)
-
 let tempID = 0
 
 export default class AddTodoItemMutation extends Mutation {
+  static propTypes = {
+    todoListID: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    bool: PropTypes.bool,
+  }
+
   commit = () => {
     const { environment, input } = this
     const {

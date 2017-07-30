@@ -1,7 +1,7 @@
 import { graphql, createPaginationContainer } from 'react-relay'
 import TodoListItemsComponent from '../components/TodoListItems'
 
-import { registerTodoListTodoItemsConnectionName } from '../mutations/AddTodoItemMutation'
+import { registerTodoListTodoItemsConnectionName } from '../registrations/todoListTodoItemsConnectionNames'
 
 export default createPaginationContainer(
   TodoListItemsComponent,
