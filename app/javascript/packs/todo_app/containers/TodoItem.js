@@ -18,15 +18,13 @@ class TodoItemContainer extends Component {
     }).isRequired,
   }
 
-  _getNewRemoveTodoItemMutation = () => {
-    const { todoItem } = this.props
+  constructor(props, context) {
+    super(props, context)
 
-    return new RemoveTodoItemMutation(environment, {
-      input: {
-        todoItemID: todoItem.id,
-        todoListID: todoItem.todoList.id,
-      },
-    })
+    const { name } = props.todoItem
+    this.state = {
+      updateNameMutation: this._getNewUpdateTodoItemMutation({ name }),
+    }
   }
 
   _getNewUpdateTodoItemMutation = ({ name, completed }) => {
@@ -46,16 +44,47 @@ class TodoItemContainer extends Component {
     mutation.commit()
   }
 
+  _handleEditNameChangeText = (name) => {
+    const { updateNameMutation } = this.state
+    this.setState({ updateNameMutation: updateNameMutation.updateInput({ name }) })
+  }
+
+  _handleSubmitNameEditing = () => {
+    const { updateNameMutation } = this.state
+    if (updateNameMutation.isValid()) {
+      updateNameMutation.commit()
+    } else {
+      updateNameMutation.updateInput({ name: this.props.todoItem.name })
+      this.setState({ updateNameMutation })
+    }
+  }
+
+  _getNewRemoveTodoItemMutation = () => {
+    const { todoItem } = this.props
+
+    return new RemoveTodoItemMutation(environment, {
+      input: {
+        todoItemID: todoItem.id,
+        todoListID: todoItem.todoList && todoItem.todoList.id,
+      },
+    })
+  }
+
   _handleRemovePress = () => {
     const mutation = this._getNewRemoveTodoItemMutation()
     mutation.commit()
   }
 
   render() {
+    const { updateNameMutation } = this.state
+
     return (
       <TodoItemComponent
         {...this.props}
         onCompletedChangeValue={this._handleCompletedChangeValue}
+        editNameValue={updateNameMutation.input.name}
+        onEditNameChangeText={this._handleEditNameChangeText}
+        onSubmitNameEditing={this._handleSubmitNameEditing}
         onRemovePress={this._handleRemovePress}
       />
     )

@@ -13,6 +13,8 @@ export default class Mutation {
     return this
   }
 
+  isValid = () => true
+
   commit = () => {
   }
 }

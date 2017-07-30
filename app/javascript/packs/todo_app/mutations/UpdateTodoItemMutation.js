@@ -30,6 +30,19 @@ export default class UpdateTodoItemMutation extends Mutation {
     completed: PropTypes.bool,
   }
 
+  isValid = () => {
+    const { input } = this
+    const {
+      todoItemID,
+      name,
+    } = input
+    if (!todoItemID) return false
+    if (typeof name !== 'undefined') {
+      if (!name) return false
+    }
+    return true
+  }
+
   commit = () => {
     const { environment, input } = this
     const {
