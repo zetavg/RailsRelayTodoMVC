@@ -37,6 +37,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Model Enhancements
+gem 'active_type'
+
 # GraphQL
 gem 'graphql'
 

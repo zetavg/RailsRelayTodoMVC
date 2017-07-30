@@ -24,6 +24,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_type (0.6.3)
+      activerecord (>= 3.2)
     activejob (5.1.2)
       activesupport (= 5.1.2)
       globalid (>= 0.3.6)
@@ -162,6 +164,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_type
   byebug
   coffee-rails (~> 4.2)
   graphql
