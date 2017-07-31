@@ -38,6 +38,11 @@ const fragment /*: ConcreteFragment*/ = {
       "kind": "RootArgument",
       "name": "cursor",
       "type": "String"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "filter",
+      "type": "TodoListTodoItemsFilterEnum"
     }
   ],
   "kind": "Fragment",
@@ -79,7 +84,14 @@ const fragment /*: ConcreteFragment*/ = {
     {
       "kind": "LinkedField",
       "alias": "todoItems",
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "filter",
+          "variableName": "filter",
+          "type": "TodoListTodoItemsFilterEnum"
+        }
+      ],
       "concreteType": "TodoItemConnection",
       "name": "__TodoListItems_todoItems_connection",
       "plural": false,

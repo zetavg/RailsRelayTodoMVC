@@ -93,10 +93,14 @@ const sharedUpdater = (store, {
   removedTodoItemID,
 }) => {
   todoListTodoItemsConnectionNames.forEach((connName) => {
-    const conn = ConnectionHandler.getConnection(
-      todoListProxy,
-      connName,
-    )
-    ConnectionHandler.deleteNode(conn, removedTodoItemID)
+    ['all', 'active', 'completed'].forEach((filter) => {
+      const conn = ConnectionHandler.getConnection(
+        todoListProxy,
+        connName,
+        { filter },
+      )
+      if (!conn) return
+      ConnectionHandler.deleteNode(conn, removedTodoItemID)
+    })
   })
 }

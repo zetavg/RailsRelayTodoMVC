@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 50b43f4481c6f050e3ce1995d098463d
+ * @relayHash 5c90f5da6ae7cb1a15539f716c5f7cb5
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type {ConcreteBatch} from 'relay-runtime';
-export type TodoListItemsPaginationQueryResponse = {|
+export type TodoListCardQueryResponse = {|
   +viewer: ?{|
     +todoList: ?{| |};
   |};
@@ -18,18 +18,39 @@ export type TodoListItemsPaginationQueryResponse = {|
 
 
 /*
-query TodoListItemsPaginationQuery(
+query TodoListCardQuery(
   $count: Int!
   $cursor: String
   $filter: TodoListTodoItemsFilterEnum
 ) {
   viewer {
     todoList {
-      ...TodoListItems_todoList
+      ...TodoListCard_todoList
       id
     }
     id
   }
+}
+
+fragment TodoListCard_todoList on TodoList {
+  ...TodoListHeader_todoList
+  ...TodoListItemsWithFilter_todoList
+  ...TodoListFooter_todoList
+}
+
+fragment TodoListHeader_todoList on TodoList {
+  name
+  ...AddTodoItemInput_todoList
+}
+
+fragment TodoListItemsWithFilter_todoList on TodoList {
+  ...TodoListItems_todoList
+}
+
+fragment TodoListFooter_todoList on TodoList {
+  id
+  activeTodoItemsCount
+  completedTodoItemsCount
 }
 
 fragment TodoListItems_todoList on TodoList {
@@ -62,6 +83,10 @@ fragment TodoItem_todoItem on TodoItem {
     id
   }
 }
+
+fragment AddTodoItemInput_todoList on TodoList {
+  id
+}
 */
 
 const batch /*: ConcreteBatch*/ = {
@@ -88,7 +113,7 @@ const batch /*: ConcreteBatch*/ = {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TodoListItemsPaginationQuery",
+    "name": "TodoListCardQuery",
     "selections": [
       {
         "kind": "LinkedField",
@@ -108,7 +133,7 @@ const batch /*: ConcreteBatch*/ = {
             "selections": [
               {
                 "kind": "FragmentSpread",
-                "name": "TodoListItems_todoList",
+                "name": "TodoListCard_todoList",
                 "args": null
               }
             ],
@@ -123,7 +148,7 @@ const batch /*: ConcreteBatch*/ = {
   "id": null,
   "kind": "Batch",
   "metadata": {},
-  "name": "TodoListItemsPaginationQuery",
+  "name": "TodoListCardQuery",
   "query": {
     "argumentDefinitions": [
       {
@@ -146,7 +171,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ],
     "kind": "Root",
-    "name": "TodoListItemsPaginationQuery",
+    "name": "TodoListCardQuery",
     "operation": "query",
     "selections": [
       {
@@ -165,6 +190,13 @@ const batch /*: ConcreteBatch*/ = {
             "name": "todoList",
             "plural": false,
             "selections": [
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "args": null,
+                "name": "name",
+                "storageKey": null
+              },
               {
                 "kind": "ScalarField",
                 "alias": null,
@@ -359,6 +391,13 @@ const batch /*: ConcreteBatch*/ = {
                 "filters": [
                   "filter"
                 ]
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "args": null,
+                "name": "activeTodoItemsCount",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -375,7 +414,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ]
   },
-  "text": "query TodoListItemsPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $filter: TodoListTodoItemsFilterEnum\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor, filter: $filter) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
+  "text": "query TodoListCardQuery(\n  $count: Int!\n  $cursor: String\n  $filter: TodoListTodoItemsFilterEnum\n) {\n  viewer {\n    todoList {\n      ...TodoListCard_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListCard_todoList on TodoList {\n  ...TodoListHeader_todoList\n  ...TodoListItemsWithFilter_todoList\n  ...TodoListFooter_todoList\n}\n\nfragment TodoListHeader_todoList on TodoList {\n  name\n  ...AddTodoItemInput_todoList\n}\n\nfragment TodoListItemsWithFilter_todoList on TodoList {\n  ...TodoListItems_todoList\n}\n\nfragment TodoListFooter_todoList on TodoList {\n  id\n  activeTodoItemsCount\n  completedTodoItemsCount\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor, filter: $filter) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n\nfragment AddTodoItemInput_todoList on TodoList {\n  id\n}\n"
 };
 
 module.exports = batch;

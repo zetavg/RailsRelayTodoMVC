@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 0205359e462e503e239ab0d4eda681e5
+ * @relayHash 9d3d247ba1c36023cd197ae9c067cfd8
  */
 
 /* eslint-disable */
@@ -21,6 +21,7 @@ export type TodoListItemsQueryResponse = {|
 query TodoListItemsQuery(
   $count: Int!
   $cursor: String
+  $filter: TodoListTodoItemsFilterEnum
 ) {
   viewer {
     todoList {
@@ -35,7 +36,7 @@ fragment TodoListItems_todoList on TodoList {
   id
   todoItemsCount
   completedTodoItemsCount
-  todoItems(first: $count, after: $cursor) {
+  todoItems(first: $count, after: $cursor, filter: $filter) {
     pageInfo {
       endCursor
       hasNextPage
@@ -76,6 +77,12 @@ const batch /*: ConcreteBatch*/ = {
         "kind": "LocalArgument",
         "name": "cursor",
         "type": "String",
+        "defaultValue": null
+      },
+      {
+        "kind": "LocalArgument",
+        "name": "filter",
+        "type": "TodoListTodoItemsFilterEnum",
         "defaultValue": null
       }
     ],
@@ -130,6 +137,12 @@ const batch /*: ConcreteBatch*/ = {
         "name": "cursor",
         "type": "String",
         "defaultValue": null
+      },
+      {
+        "kind": "LocalArgument",
+        "name": "filter",
+        "type": "TodoListTodoItemsFilterEnum",
+        "defaultValue": null
       }
     ],
     "kind": "Root",
@@ -182,6 +195,12 @@ const batch /*: ConcreteBatch*/ = {
                     "name": "after",
                     "variableName": "cursor",
                     "type": "String"
+                  },
+                  {
+                    "kind": "Variable",
+                    "name": "filter",
+                    "variableName": "filter",
+                    "type": "TodoListTodoItemsFilterEnum"
                   },
                   {
                     "kind": "Variable",
@@ -323,6 +342,12 @@ const batch /*: ConcreteBatch*/ = {
                   },
                   {
                     "kind": "Variable",
+                    "name": "filter",
+                    "variableName": "filter",
+                    "type": "TodoListTodoItemsFilterEnum"
+                  },
+                  {
+                    "kind": "Variable",
                     "name": "first",
                     "variableName": "count",
                     "type": "Int"
@@ -331,7 +356,9 @@ const batch /*: ConcreteBatch*/ = {
                 "handle": "connection",
                 "name": "todoItems",
                 "key": "TodoListItems_todoItems",
-                "filters": null
+                "filters": [
+                  "filter"
+                ]
               }
             ],
             "storageKey": null
@@ -348,7 +375,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ]
   },
-  "text": "query TodoListItemsQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
+  "text": "query TodoListItemsQuery(\n  $count: Int!\n  $cursor: String\n  $filter: TodoListTodoItemsFilterEnum\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor, filter: $filter) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
 };
 
 module.exports = batch;

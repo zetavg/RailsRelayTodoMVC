@@ -14,6 +14,29 @@ class TodoListItemsContainer extends Component {
     todoList: PropTypes.shape({
       id: PropTypes.string.isRequired,
     }).isRequired,
+    relay: PropTypes.shape({
+      hasMore: PropTypes.func.isRequired,
+      isLoading: PropTypes.func.isRequired,
+      loadMore: PropTypes.func.isRequired,
+      refetchConnection: PropTypes.func.isRequired,
+    }).isRequired,
+  }
+
+  setFilter = (filter) => {
+    this.props.relay.refetch({ filter })
+  }
+
+  loadMore = () => {
+    if (!this.props.relay.hasMore() || this.props.relay.isLoading()) return
+    this.props.relay.loadMore(10)
+  }
+
+  refresh = () => {
+    if (this.props.relay.isLoading()) return
+    this.setState({ refreshing: true })
+    this.props.relay.refetchConnection(10, () => {
+      this.setState({ refreshing: false })
+    })
   }
 
   _getNewMarkAllTodoItemsMutation = ({ completed }) => {
@@ -52,6 +75,7 @@ export default createPaginationContainer(
       todoItems(
         first: $count
         after: $cursor
+        filter: $filter
       ) @connection(key: "TodoListItems_todoItems") {
         pageInfo {
           endCursor
@@ -88,6 +112,7 @@ export default createPaginationContainer(
       query TodoListItemsPaginationQuery(
         $count: Int!
         $cursor: String
+        $filter: TodoListTodoItemsFilterEnum
       ) {
         viewer {
           todoList {

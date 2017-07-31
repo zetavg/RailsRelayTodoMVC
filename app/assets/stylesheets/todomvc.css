@@ -38,14 +38,14 @@ body {
     display: none;
 }
 
-.todoapp-container {
+.todo-list-card-container {
     min-width: 230px;
     max-width: 550px;
     margin: 0 auto;
     padding: 0 12px;
 }
 
-.todoapp {
+.todo-list-card {
     background: #fff;
     margin: 130px 0 40px 0;
     position: relative;
@@ -53,25 +53,25 @@ body {
                 0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
-.todoapp input::-webkit-input-placeholder {
+.todo-list-card input::-webkit-input-placeholder {
     font-style: italic;
     font-weight: 300;
     color: #e6e6e6;
 }
 
-.todoapp input::-moz-placeholder {
+.todo-list-card input::-moz-placeholder {
     font-style: italic;
     font-weight: 300;
     color: #e6e6e6;
 }
 
-.todoapp input::input-placeholder {
+.todo-list-card input::input-placeholder {
     font-style: italic;
     font-weight: 300;
     color: #e6e6e6;
 }
 
-.todoapp h1 {
+.todo-list-card h1 {
     position: absolute;
     top: -155px;
     width: 100%;
@@ -169,6 +169,7 @@ body {
 .todo-list li.editing .edit {
     display: block;
     width: 506px;
+    width: calc(100% - 43px);
     padding: 12px 16px;
     margin: 0 0 0 43px;
 }
@@ -298,24 +299,38 @@ body {
     left: 0;
 }
 
+.items-with-filter {
+    position: relative;
+}
+
+.items-with-filter .filters {
+    z-index: 1;
+    position: absolute;
+    left: 120px;
+    right: 120px;
+    bottom: -36px;
+    text-align: center;
+}
+
 .filters li {
     display: inline;
 }
 
-.filters li a {
+.filters li > * {
     color: inherit;
     margin: 3px;
     padding: 3px 7px;
     text-decoration: none;
     border: 1px solid transparent;
     border-radius: 3px;
+    cursor: pointer;
 }
 
-.filters li a:hover {
+.filters li > *:hover {
     border-color: rgba(175, 47, 47, 0.1);
 }
 
-.filters li a.selected {
+.filters li > *.selected {
     border-color: rgba(175, 47, 47, 0.2);
 }
 

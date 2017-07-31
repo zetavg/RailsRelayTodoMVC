@@ -2,20 +2,20 @@ import React from 'react'
 import { QueryRenderer, graphql } from 'react-relay'
 import environment from './relay/environment'
 
-import TodoListItemsContainer from './containers/TodoListItems'
+import TodoListCardContainer from './containers/TodoListCard'
 
-const TodoListItems = () => (
+const TodoListCard = () => (
   <QueryRenderer
     environment={environment}
     query={graphql`
-      query TodoListItemsQuery(
+      query TodoListCardQuery(
         $count: Int!
         $cursor: String
         $filter: TodoListTodoItemsFilterEnum
       ) {
         viewer {
           todoList {
-            ...TodoListItems_todoList
+            ...TodoListCard_todoList
           }
         }
       }
@@ -28,11 +28,11 @@ const TodoListItems = () => (
       if (error) {
         throw error
       } else if (props) {
-        return <TodoListItemsContainer todoList={props.viewer.todoList} />
+        return <TodoListCardContainer todoList={props.viewer.todoList} />
       }
       return <div>Loading</div>
     }}
   />
 )
 
-export default TodoListItems
+export default TodoListCard

@@ -22,17 +22,6 @@ export default class TodoListFooter extends Component {
           <strong>{todoList.activeTodoItemsCount}</strong>&nbsp;
           {todoList.activeTodoItemsCount > 1 ? 'items' : 'item'} left
         </span>
-        <ul className="filters">
-          <li>
-            <a className="selected" href="#/">All</a>
-          </li>
-          <li>
-            <a href="#/active">Active</a>
-          </li>
-          <li>
-            <a href="#/completed">Completed</a>
-          </li>
-        </ul>
         {(() => {
           if (todoList.completedTodoItemsCount > 0) {
             return (

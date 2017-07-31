@@ -112,10 +112,23 @@ const sharedUpdater = (store, {
   todoListTodoItemsConnectionEdge,
 }) => {
   todoListTodoItemsConnectionNames.forEach((connName) => {
-    const conn = ConnectionHandler.getConnection(
-      todoListProxy,
-      connName,
-    )
-    ConnectionHandler.insertEdgeAfter(conn, todoListTodoItemsConnectionEdge)
+    ['all', 'active', 'completed'].forEach((filter) => {
+      const conn = ConnectionHandler.getConnection(
+        todoListProxy,
+        connName,
+        { filter },
+      )
+      if (!conn) return
+
+      const completed = todoListTodoItemsConnectionEdge.getLinkedRecord('node').getValue('completed')
+
+      if (
+        (filter === 'all') ||
+        (filter === 'active' && !completed) ||
+        (filter === 'completed' && completed)
+      ) {
+        ConnectionHandler.insertEdgeAfter(conn, todoListTodoItemsConnectionEdge)
+      }
+    })
   })
 }

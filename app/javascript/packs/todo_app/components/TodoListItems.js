@@ -4,12 +4,6 @@ import TodoItem from '../containers/TodoItem'
 
 export default class TodoListItems extends Component {
   static propTypes = {
-    relay: PropTypes.shape({
-      hasMore: PropTypes.func.isRequired,
-      isLoading: PropTypes.func.isRequired,
-      loadMore: PropTypes.func.isRequired,
-      refetchConnection: PropTypes.func.isRequired,
-    }).isRequired,
     todoList: PropTypes.shape({
       todoItemsCount: PropTypes.number.isRequired,
       completedTodoItemsCount: PropTypes.number.isRequired,
@@ -32,19 +26,6 @@ export default class TodoListItems extends Component {
     this.state = {
       refreshing: false,
     }
-  }
-
-  loadMore = () => {
-    if (!this.props.relay.hasMore() || this.props.relay.isLoading()) return
-    this.props.relay.loadMore(10)
-  }
-
-  refresh = () => {
-    if (this.props.relay.isLoading()) return
-    this.setState({ refreshing: true })
-    this.props.relay.refetchConnection(10, () => {
-      this.setState({ refreshing: false })
-    })
   }
 
   _handleToggleAllChange = (e) => {

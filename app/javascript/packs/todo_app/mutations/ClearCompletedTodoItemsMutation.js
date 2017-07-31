@@ -57,17 +57,22 @@ export default class ClearCompletedTodoItemsMutation extends Mutation {
           const removedTodoItemIDsSet = new Set()
 
           todoListTodoItemsConnectionNames.forEach((connName) => {
-            const conn = ConnectionHandler.getConnection(
-              todoListProxy,
-              connName,
-            )
+            ['all', 'active', 'completed'].forEach((filter) => {
+              const conn = ConnectionHandler.getConnection(
+                todoListProxy,
+                connName,
+                { filter },
+              )
 
-            const completedTodoItemIDs = conn.getLinkedRecords('edges')
-              .map(p => p.getLinkedRecord('node'))
-              .filter(n => n.getValue('completed'))
-              .map(n => n.getValue('id'))
+              if (!conn) return
 
-            completedTodoItemIDs.forEach(id => removedTodoItemIDsSet.add(id))
+              const completedTodoItemIDs = conn.getLinkedRecords('edges')
+                .map(p => p.getLinkedRecord('node'))
+                .filter(n => n.getValue('completed'))
+                .map(n => n.getValue('id'))
+
+              completedTodoItemIDs.forEach(id => removedTodoItemIDsSet.add(id))
+            })
           })
 
           sharedUpdater(store, {
@@ -85,12 +90,16 @@ const sharedUpdater = (store, {
   removedTodoItemIDs,
 }) => {
   todoListTodoItemsConnectionNames.forEach((connName) => {
-    const conn = ConnectionHandler.getConnection(
-      todoListProxy,
-      connName,
-    )
-    removedTodoItemIDs.forEach(
-      removedID => ConnectionHandler.deleteNode(conn, removedID),
-    )
+    ['all', 'active', 'completed'].forEach((filter) => {
+      const conn = ConnectionHandler.getConnection(
+        todoListProxy,
+        connName,
+        { filter },
+      )
+      if (!conn) return
+      removedTodoItemIDs.forEach(
+        removedID => ConnectionHandler.deleteNode(conn, removedID),
+      )
+    })
   })
 }
