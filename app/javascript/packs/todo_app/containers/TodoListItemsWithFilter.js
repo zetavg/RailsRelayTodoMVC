@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { graphql, createRefetchContainer } from 'react-relay'
-import environment from '../relay/environment'
 
 import TodoListItemsWithFilterComponent from '../components/TodoListItemsWithFilter'
 
 class TodoListItemsWithFilterContainer extends Component {
   static propTypes = {
-    todoList: PropTypes.shape({}),
+    todoList: PropTypes.shape({}).isRequired,
     relay: PropTypes.shape({
       refetch: PropTypes.func.isRequired,
     }).isRequired,
@@ -21,13 +20,20 @@ class TodoListItemsWithFilterContainer extends Component {
     }
   }
 
-  setFilter = (filter) => {
-    this.props.relay.refetch({ filter })
+  setFilter = (filter, callback) => {
+    this.props.relay.refetch({ filter }, null, callback, { force: false })
     this.setState({ filter })
   }
 
   _handleFilterPress = (filter) => {
-    this.setFilter(filter)
+    this.setFilter(filter, () => {
+      if (
+        this.todoListItems &&
+        this.todoListItems.refreshLayout
+      ) {
+        this.todoListItems.refreshLayout()
+      }
+    })
   }
 
   render() {
@@ -36,6 +42,7 @@ class TodoListItemsWithFilterContainer extends Component {
 
     return (
       <TodoListItemsWithFilterComponent
+        todoListItemsRef={ref => this.todoListItems = ref}
         todoList={todoList}
         filterValue={filter}
         onFilterPress={this._handleFilterPress}

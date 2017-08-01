@@ -26,9 +26,18 @@ class TodoListItemsContainer extends Component {
     this.props.relay.refetch({ filter })
   }
 
-  loadMore = () => {
+  loadMore = (callback) => {
     if (!this.props.relay.hasMore() || this.props.relay.isLoading()) return
-    this.props.relay.loadMore(10)
+    this.props.relay.loadMore(10, callback)
+  }
+
+  refreshLayout = () => {
+    if (
+      this.component &&
+      this.component.refreshLayout
+    ) {
+      setTimeout(this.component.refreshLayout, 10)
+    }
   }
 
   refresh = () => {
@@ -50,6 +59,12 @@ class TodoListItemsContainer extends Component {
     })
   }
 
+  _handleLoadMoreTriggered = (callbackIfHasMore) => {
+    this.loadMore(() => {
+      if (this.props.relay.hasMore()) callbackIfHasMore()
+    })
+  }
+
   _handleMarkAllCompletedChangeValue = (completed) => {
     const mutation = this._getNewMarkAllTodoItemsMutation({ completed })
     mutation.commit()
@@ -59,7 +74,9 @@ class TodoListItemsContainer extends Component {
     return (
       <TodoListItemsComponent
         {...this.props}
+        ref={ref => this.component = ref}
         onMarkAllCompletedChangeValue={this._handleMarkAllCompletedChangeValue}
+        onLoadMoreTriggered={this._handleLoadMoreTriggered}
       />
     )
   }

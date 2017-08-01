@@ -4,6 +4,7 @@ import TodoListItems from '../containers/TodoListItems'
 
 export default class TodoListItemsWithFilter extends Component {
   static propTypes = {
+    todoListItemsRef: PropTypes.any,
     todoList: PropTypes.shape({}).isRequired,
     filterValue: PropTypes.string.isRequired,
     onFilterPress: PropTypes.func.isRequired,
@@ -11,6 +12,7 @@ export default class TodoListItemsWithFilter extends Component {
 
   render() {
     const {
+      todoListItemsRef,
       todoList,
       filterValue,
       onFilterPress,
@@ -18,7 +20,10 @@ export default class TodoListItemsWithFilter extends Component {
 
     return (
       <div className="items-with-filter">
-        <TodoListItems todoList={todoList} />
+        <TodoListItems
+          componentRef={todoListItemsRef}
+          todoList={todoList}
+        />
         <ul className="filters">
           <li>
             <button

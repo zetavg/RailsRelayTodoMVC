@@ -22,7 +22,7 @@ const TodoListCard = () => (
     `}
     variables={{
       filter: 'all',
-      count: 1000,
+      count: 10,
     }}
     render={({ error, props }) => {
       if (error) {

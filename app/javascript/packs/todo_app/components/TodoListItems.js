@@ -17,6 +17,7 @@ export default class TodoListItems extends Component {
         ).isRequired,
       }).isRequired,
     }).isRequired,
+    onLoadMoreTriggered: PropTypes.func.isRequired,
     onMarkAllCompletedChangeValue: PropTypes.func.isRequired,
   }
 
@@ -26,6 +27,24 @@ export default class TodoListItems extends Component {
     this.state = {
       refreshing: false,
     }
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this._handleScroll)
+    this._handleScroll()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._handleScroll)
+  }
+
+  refreshLayout = () => {
+    this._handleScroll()
+  }
+
+  _handleScroll = () => {
+    const scrollBottom = document.body.clientHeight - window.innerHeight - window.scrollY
+    if (scrollBottom < 100) this.props.onLoadMoreTriggered(this._handleScroll)
   }
 
   _handleToggleAllChange = (e) => {

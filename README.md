@@ -12,7 +12,7 @@ bin/setup
 
 ## Running
 
-In development, you'll need to run `bin/rails server` with `bin/webpack-dev-server` to have the `app/javascript/packs/*.js` files compiled as you make changes, and `bin/relay-compiler` if you make changes to the GraphQL schema or any `graphql` tags in `app/javascript/packs/*.js`.
+In development, you'll need to run `bin/rails server` with `bin/webpack-dev-server` to have the `app/javascript/packs/*.js` files be compiled as you make changes, and `bin/relay-compiler` if you change the GraphQL schema or any `graphql` tags in any JavaScript files.
 
 If you'd rather not have to run the two processes separately by hand, you can use [Foreman](https://ddollar.github.io/foreman/):
 
