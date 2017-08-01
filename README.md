@@ -1,24 +1,39 @@
-# README
+# Rails + Relay TodoMVC
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project demonstrates to expose an Relay-compatible GraphQL API with [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) from an existing Rails app, and to build a React app with Relay which uses the GraphQL API.
 
-Things you may want to cover:
 
-* Ruby version
+## Setup
 
-* System dependencies
+```sh
+bin/setup
+```
 
-* Configuration
 
-* Database creation
+## Running
 
-* Database initialization
+In development, you'll need to run `bin/rails server` with `bin/webpack-dev-server` to have the `app/javascript/packs/*.js` files compiled as you make changes, and `bin/relay-compiler` if you make changes to the GraphQL schema or any `graphql` tags in `app/javascript/packs/*.js`.
 
-* How to run the test suite
+If you'd rather not have to run the two processes separately by hand, you can use [Foreman](https://ddollar.github.io/foreman/):
 
-* Services (job queues, cache servers, search engines, etc.)
+```sh
+gem install foreman
+```
 
-* Deployment instructions
+```sh
+foreman start
+```
 
-* ...
+The default port of the Rails Server is `5000`.
+
+
+## TODOs
+
+- [ ] Refactor code
+- [ ] Use cached data while switching the todo items filter
+- [ ] Fix all optimistic updates
+- [ ] Use Relay Subscriptions with Action Cable to do realtime update
+- [ ] Resolve Rails n+1 query problem while executing an GraphQL query
+- [ ] Let the user manage multiple todo lists
+- [ ] Implement user authentication
+- [ ] Build a React Native app with the same JavaScript codebase
