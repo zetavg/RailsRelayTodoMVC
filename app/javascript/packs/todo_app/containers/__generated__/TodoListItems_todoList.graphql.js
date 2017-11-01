@@ -18,6 +18,7 @@ export type TodoListItems_todoList = {|
       +hasNextPage: boolean;
     |};
     +edges: ?$ReadOnlyArray<?{|
+      +cursor: string;
       +node: ?{|
         +id: string;
       |};
@@ -130,6 +131,13 @@ const fragment /*: ConcreteFragment*/ = {
           "plural": true,
           "selections": [
             {
+              "kind": "ScalarField",
+              "alias": null,
+              "args": null,
+              "name": "cursor",
+              "storageKey": null
+            },
+            {
               "kind": "LinkedField",
               "alias": null,
               "args": null,
@@ -148,6 +156,13 @@ const fragment /*: ConcreteFragment*/ = {
                   "kind": "FragmentSpread",
                   "name": "TodoItem_todoItem",
                   "args": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "args": null,
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
               "storageKey": null

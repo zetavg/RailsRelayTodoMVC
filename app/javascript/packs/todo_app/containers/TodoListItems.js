@@ -120,6 +120,7 @@ export default createPaginationContainer(
     },
     getVariables(props, { count, cursor }, fragmentVariables) {
       return {
+        todoListID: props.todoList.id,
         ...fragmentVariables,
         count,
         cursor,
@@ -127,12 +128,13 @@ export default createPaginationContainer(
     },
     query: graphql`
       query TodoListItemsPaginationQuery(
+        $todoListID: ID
         $count: Int!
         $cursor: String
         $filter: TodoListTodoItemsFilterEnum
       ) {
         viewer {
-          todoList {
+          todoList(id: $todoListID) {
             ...TodoListItems_todoList
           }
         }

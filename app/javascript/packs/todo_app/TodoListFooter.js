@@ -4,18 +4,23 @@ import environment from './relay/environment'
 
 import TodoListFooterContainer from './containers/TodoListFooter'
 
-const TodoListFooter = () => (
+const TodoListFooter = (todoListID) => (
   <QueryRenderer
     environment={environment}
     query={graphql`
-      query TodoListFooterQuery{
+      query TodoListFooterQuery(
+        $todoListID: ID
+      ) {
         viewer {
-          todoList {
+          todoList(id: $todoListID) {
             ...TodoListFooter_todoList
           }
         }
       }
     `}
+    variables={{
+      todoListID,
+    }}
     render={({ error, props }) => {
       if (error) {
         throw error

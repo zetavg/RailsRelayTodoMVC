@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash ab5bf1836a5a26bea33badc53774e78f
+ * @relayHash 6f7dd89a7b3099f35e9121bb4705bcf3
  */
 
 /* eslint-disable */
@@ -15,7 +15,6 @@ export type ClearCompletedTodoItemsMutationVariables = {|
     todoListID: string;
   };
 |};
-
 export type ClearCompletedTodoItemsMutationResponse = {|
   +clearCompletedTodoItems: ?{|
     +removedTodoItems: $ReadOnlyArray<?{|

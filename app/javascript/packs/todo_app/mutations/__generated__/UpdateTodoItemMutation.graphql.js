@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 49ac0e4b4e352eb0962fedbecded87c5
+ * @relayHash ebf3cc02e832acc6f52b18333d332479
  */
 
 /* eslint-disable */
@@ -17,7 +17,6 @@ export type UpdateTodoItemMutationVariables = {|
     todoItemID: string;
   };
 |};
-
 export type UpdateTodoItemMutationResponse = {|
   +updateTodoItem: ?{|
     +todoItem: {|

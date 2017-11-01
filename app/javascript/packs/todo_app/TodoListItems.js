@@ -4,23 +4,25 @@ import environment from './relay/environment'
 
 import TodoListItemsContainer from './containers/TodoListItems'
 
-const TodoListItems = () => (
+const TodoListItems = (todoListID) => (
   <QueryRenderer
     environment={environment}
     query={graphql`
       query TodoListItemsQuery(
+        $todoListID: ID
         $count: Int!
         $cursor: String
         $filter: TodoListTodoItemsFilterEnum
       ) {
         viewer {
-          todoList {
+          todoList(id: $todoListID) {
             ...TodoListItems_todoList
           }
         }
       }
     `}
     variables={{
+      todoListID,
       filter: 'all',
       count: 1000,
     }}

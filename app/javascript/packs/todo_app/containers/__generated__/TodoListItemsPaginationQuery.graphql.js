@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 50b43f4481c6f050e3ce1995d098463d
+ * @relayHash 1d7473404dc53160952b7648a048805d
  */
 
 /* eslint-disable */
@@ -19,12 +19,13 @@ export type TodoListItemsPaginationQueryResponse = {|
 
 /*
 query TodoListItemsPaginationQuery(
+  $todoListID: ID
   $count: Int!
   $cursor: String
   $filter: TodoListTodoItemsFilterEnum
 ) {
   viewer {
-    todoList {
+    todoList(id: $todoListID) {
       ...TodoListItems_todoList
       id
     }
@@ -40,16 +41,14 @@ fragment TodoListItems_todoList on TodoList {
     pageInfo {
       endCursor
       hasNextPage
-      hasPreviousPage
-      startCursor
     }
     edges {
+      cursor
       node {
+        __typename
         id
         ...TodoItem_todoItem
-        __typename
       }
-      cursor
     }
   }
 }
@@ -67,6 +66,12 @@ fragment TodoItem_todoItem on TodoItem {
 const batch /*: ConcreteBatch*/ = {
   "fragment": {
     "argumentDefinitions": [
+      {
+        "kind": "LocalArgument",
+        "name": "todoListID",
+        "type": "ID",
+        "defaultValue": null
+      },
       {
         "kind": "LocalArgument",
         "name": "count",
@@ -101,7 +106,14 @@ const batch /*: ConcreteBatch*/ = {
           {
             "kind": "LinkedField",
             "alias": null,
-            "args": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "id",
+                "variableName": "todoListID",
+                "type": "ID"
+              }
+            ],
             "concreteType": "TodoList",
             "name": "todoList",
             "plural": false,
@@ -126,6 +138,12 @@ const batch /*: ConcreteBatch*/ = {
   "name": "TodoListItemsPaginationQuery",
   "query": {
     "argumentDefinitions": [
+      {
+        "kind": "LocalArgument",
+        "name": "todoListID",
+        "type": "ID",
+        "defaultValue": null
+      },
       {
         "kind": "LocalArgument",
         "name": "count",
@@ -160,7 +178,14 @@ const batch /*: ConcreteBatch*/ = {
           {
             "kind": "LinkedField",
             "alias": null,
-            "args": null,
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "id",
+                "variableName": "todoListID",
+                "type": "ID"
+              }
+            ],
             "concreteType": "TodoList",
             "name": "todoList",
             "plural": false,
@@ -234,20 +259,6 @@ const batch /*: ConcreteBatch*/ = {
                         "args": null,
                         "name": "hasNextPage",
                         "storageKey": null
-                      },
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "args": null,
-                        "name": "hasPreviousPage",
-                        "storageKey": null
-                      },
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "args": null,
-                        "name": "startCursor",
-                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -261,6 +272,13 @@ const batch /*: ConcreteBatch*/ = {
                     "plural": true,
                     "selections": [
                       {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "args": null,
+                        "name": "cursor",
+                        "storageKey": null
+                      },
+                      {
                         "kind": "LinkedField",
                         "alias": null,
                         "args": null,
@@ -268,6 +286,13 @@ const batch /*: ConcreteBatch*/ = {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "args": null,
+                            "name": "__typename",
+                            "storageKey": null
+                          },
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -306,22 +331,8 @@ const batch /*: ConcreteBatch*/ = {
                               }
                             ],
                             "storageKey": null
-                          },
-                          {
-                            "kind": "ScalarField",
-                            "alias": null,
-                            "args": null,
-                            "name": "__typename",
-                            "storageKey": null
                           }
                         ],
-                        "storageKey": null
-                      },
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "args": null,
-                        "name": "cursor",
                         "storageKey": null
                       }
                     ],
@@ -375,7 +386,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ]
   },
-  "text": "query TodoListItemsPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $filter: TodoListTodoItemsFilterEnum\n) {\n  viewer {\n    todoList {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor, filter: $filter) {\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n    edges {\n      node {\n        id\n        ...TodoItem_todoItem\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
+  "text": "query TodoListItemsPaginationQuery(\n  $todoListID: ID\n  $count: Int!\n  $cursor: String\n  $filter: TodoListTodoItemsFilterEnum\n) {\n  viewer {\n    todoList(id: $todoListID) {\n      ...TodoListItems_todoList\n      id\n    }\n    id\n  }\n}\n\nfragment TodoListItems_todoList on TodoList {\n  id\n  todoItemsCount\n  completedTodoItemsCount\n  todoItems(first: $count, after: $cursor, filter: $filter) {\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n    edges {\n      cursor\n      node {\n        __typename\n        id\n        ...TodoItem_todoItem\n      }\n    }\n  }\n}\n\nfragment TodoItem_todoItem on TodoItem {\n  id\n  completed\n  name\n  todoList {\n    id\n  }\n}\n"
 };
 
 module.exports = batch;

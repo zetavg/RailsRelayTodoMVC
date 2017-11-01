@@ -4,18 +4,23 @@ import environment from './relay/environment'
 
 import TodoListHeaderContainer from './containers/TodoListHeader'
 
-const TodoListHeader = () => (
+const TodoListHeader = (todoListID) => (
   <QueryRenderer
     environment={environment}
     query={graphql`
-      query TodoListHeaderQuery{
+      query TodoListHeaderQuery(
+        $todoListID: ID
+      ) {
         viewer {
-          todoList {
+          todoList(id: $todoListID) {
             ...TodoListHeader_todoList
           }
         }
       }
     `}
+    variables={{
+      todoListID,
+    }}
     render={({ error, props }) => {
       if (error) {
         throw error

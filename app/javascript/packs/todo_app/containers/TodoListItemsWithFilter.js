@@ -64,12 +64,13 @@ export default createRefetchContainer(
   `,
   graphql.experimental`
     query TodoListItemsWithFilterRefetchQuery(
+      $todoListID: ID
       $filter: TodoListTodoItemsFilterEnum!
       $count: Int!
       $cursor: String
     ) {
       viewer {
-        todoList {
+        todoList(id: $todoListID) {
           ...TodoListItemsWithFilter_todoList
         }
       }

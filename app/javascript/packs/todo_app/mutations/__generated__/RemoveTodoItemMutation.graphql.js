@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 9cbfcb19f74898986a9a338e3a340841
+ * @relayHash f4e3b76ba3c8b97b3ddb0e29322057b3
  */
 
 /* eslint-disable */
@@ -15,7 +15,6 @@ export type RemoveTodoItemMutationVariables = {|
     todoItemID: string;
   };
 |};
-
 export type RemoveTodoItemMutationResponse = {|
   +removeTodoItem: ?{|
     +removedTodoItem: {|

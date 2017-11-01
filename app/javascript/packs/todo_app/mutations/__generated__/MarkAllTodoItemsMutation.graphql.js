@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f4350d9202f285bdefa3079d8bf46dc2
+ * @relayHash da4b97796298e191f3133e77f0cdaa30
  */
 
 /* eslint-disable */
@@ -16,7 +16,6 @@ export type MarkAllTodoItemsMutationVariables = {|
     todoListID: string;
   };
 |};
-
 export type MarkAllTodoItemsMutationResponse = {|
   +markAllTodoItems: ?{|
     +changedTodoItems: $ReadOnlyArray<?{|
