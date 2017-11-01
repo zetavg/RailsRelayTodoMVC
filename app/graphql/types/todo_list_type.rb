@@ -16,7 +16,7 @@ Types::TodoListType = GraphQL::ObjectType.define do
     resolve ->(obj, args, ctx) {
       todo_items = obj.todo_items.reorder(created_at: :asc)
 
-      case args[:filter].to_sym
+      case args[:filter]&.to_sym
       when :active
         todo_items.active
       when :completed

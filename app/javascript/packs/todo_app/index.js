@@ -15,7 +15,7 @@ export default class TodoApp extends Component {
         <TodoListCard todoListID={this.state.todoListID} />
         <footer className="info">
           <p>Double-click to edit a todo</p>
-          Todo List:&nbsp;
+          Todo list:&nbsp;
           <TodoListSelect
             onChangeID={(todoListID) => { this.setState({ todoListID }) }}
           />
