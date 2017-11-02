@@ -102,10 +102,32 @@ type RemoveTodoItemPayload {
   todoList: TodoList!
 }
 
+type Subscription {
+  # A todo item was added to the todo list
+  todoItemAdded(todoListID: ID!): TodoItemAdded!
+
+  # A todo item in the todo list was removed
+  todoItemRemoved(todoListID: ID!): TodoItemRemoved!
+
+  # A todo item in the todo list was updated
+  todoItemUpdated(todoListID: ID!): TodoItemUpdated!
+
+  # Some todo items in the todo list was removed
+  todoItemsRemoved(todoListID: ID!): TodoItemsRemoved!
+
+  # Some todo items in the todo list was updated
+  todoItemsUpdated(todoListID: ID!): TodoItemsUpdated!
+}
+
 type TodoItem implements Node {
   completed: Boolean!
   id: ID!
   name: String!
+  todoList: TodoList!
+}
+
+type TodoItemAdded {
+  todoItem: TodoItem!
   todoList: TodoList!
 }
 
@@ -125,6 +147,26 @@ type TodoItemEdge {
 
   # The item at the end of the edge.
   node: TodoItem
+}
+
+type TodoItemRemoved {
+  removedTodoItemID: ID!
+  todoList: TodoList!
+}
+
+type TodoItemUpdated {
+  todoItem: TodoItem!
+  todoList: TodoList!
+}
+
+type TodoItemsRemoved {
+  removedTodoItemIDs: [ID]!
+  todoList: TodoList!
+}
+
+type TodoItemsUpdated {
+  todoList: TodoList!
+  updatedTodoItems: [TodoItem]!
 }
 
 type TodoList implements Node {

@@ -88,7 +88,7 @@ export default class MarkAllTodoItemsMutation extends Mutation {
   }
 }
 
-const sharedUpdater = (store, {
+export const sharedUpdater = (store, {
   todoListProxy,
   removedTodoItemID,
 }) => {

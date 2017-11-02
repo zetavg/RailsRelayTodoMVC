@@ -107,7 +107,7 @@ export default class AddTodoItemMutation extends Mutation {
   }
 }
 
-const sharedUpdater = (store, {
+export const sharedUpdater = (store, {
   todoListProxy,
   todoListTodoItemsConnectionEdge,
 }) => {

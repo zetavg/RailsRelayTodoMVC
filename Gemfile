@@ -1,3 +1,5 @@
+ruby '2.4.0'
+
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
@@ -39,6 +41,7 @@ gem 'jbuilder', '~> 2.5'
 
 # Model Enhancements
 gem 'active_type'
+gem 'rails-observers'
 
 # GraphQL
 gem 'graphql'
