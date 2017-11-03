@@ -3,8 +3,7 @@ import {
   graphql,
 } from 'react-relay'
 import PropTypes from 'prop-types'
-import { ConnectionHandler } from 'relay-runtime'
-import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
+import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
 import Mutation from './Mutation'
 
 const mutation = graphql`
@@ -48,7 +47,7 @@ export default class MarkAllTodoItemsMutation extends Mutation {
         updater: (store) => {
           const payload = store.getRootField('removeTodoItem')
           const todoListProxy = payload.getLinkedRecord('todoList')
-          sharedUpdater(store, {
+          todoItemsRemovedUpdater(store, {
             todoListProxy,
             removedTodoItemID: todoItemID,
           })
@@ -57,7 +56,7 @@ export default class MarkAllTodoItemsMutation extends Mutation {
           if (!todoListID) return
           const todoListProxy = store.get(todoListID)
 
-          sharedUpdater(store, {
+          todoItemsRemovedUpdater(store, {
             todoListProxy,
             removedTodoItemID: todoItemID,
           })
@@ -88,19 +87,3 @@ export default class MarkAllTodoItemsMutation extends Mutation {
   }
 }
 
-export const sharedUpdater = (store, {
-  todoListProxy,
-  removedTodoItemID,
-}) => {
-  todoListTodoItemsConnectionNames.forEach((connName) => {
-    ['all', 'active', 'completed'].forEach((filter) => {
-      const conn = ConnectionHandler.getConnection(
-        todoListProxy,
-        connName,
-        { filter },
-      )
-      if (!conn) return
-      ConnectionHandler.deleteNode(conn, removedTodoItemID)
-    })
-  })
-}

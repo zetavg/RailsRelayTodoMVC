@@ -2,9 +2,8 @@ import {
   commitMutation,
   graphql,
 } from 'react-relay'
-import { ConnectionHandler } from 'relay-runtime'
 import PropTypes from 'prop-types'
-import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
+import todoItemAddedUpdater from '../updaters/todoItemAddedUpdater'
 import Mutation from './Mutation'
 
 const mutation = graphql`
@@ -63,7 +62,7 @@ export default class AddTodoItemMutation extends Mutation {
           const todoListTodoItemsConnectionEdge = payload.getLinkedRecord('todoListTodoItemsConnectionEdge')
           const todoListProxy = payload.getLinkedRecord('todoList')
 
-          sharedUpdater(store, {
+          todoItemAddedUpdater(store, {
             todoListProxy,
             todoListTodoItemsConnectionEdge,
           })
@@ -81,7 +80,7 @@ export default class AddTodoItemMutation extends Mutation {
           )
           newTodoItemEdge.setLinkedRecord(newTodoItemNode, 'node')
 
-          sharedUpdater(store, {
+          todoItemAddedUpdater(store, {
             todoListProxy,
             todoListTodoItemsConnectionEdge: newTodoItemEdge,
           })
@@ -105,30 +104,4 @@ export default class AddTodoItemMutation extends Mutation {
       },
     )
   }
-}
-
-export const sharedUpdater = (store, {
-  todoListProxy,
-  todoListTodoItemsConnectionEdge,
-}) => {
-  todoListTodoItemsConnectionNames.forEach((connName) => {
-    ['all', 'active', 'completed'].forEach((filter) => {
-      const conn = ConnectionHandler.getConnection(
-        todoListProxy,
-        connName,
-        { filter },
-      )
-      if (!conn) return
-
-      const completed = todoListTodoItemsConnectionEdge.getLinkedRecord('node').getValue('completed')
-
-      if (
-        (filter === 'all') ||
-        (filter === 'active' && !completed) ||
-        (filter === 'completed' && completed)
-      ) {
-        ConnectionHandler.insertEdgeAfter(conn, todoListTodoItemsConnectionEdge)
-      }
-    })
-  })
 }

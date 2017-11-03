@@ -4,7 +4,7 @@ import {
 } from 'react-relay'
 import Subscription from './Subscription'
 
-import { sharedUpdater } from '../mutations/AddTodoItemMutation'
+import todoItemAddedUpdater from '../updaters/todoItemAddedUpdater'
 
 const subscription = graphql`
   subscription TodoItemAddedSubscription(
@@ -47,7 +47,7 @@ export default class TodoItemAddedSubscription extends Subscription {
           )
           todoListTodoItemsConnectionEdge.setLinkedRecord(todoItemProxy, 'node')
 
-          sharedUpdater(store, {
+          todoItemAddedUpdater(store, {
             todoListProxy,
             todoListTodoItemsConnectionEdge,
           })

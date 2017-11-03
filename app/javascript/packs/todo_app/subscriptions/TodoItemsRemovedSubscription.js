@@ -4,7 +4,7 @@ import {
 } from 'react-relay'
 import Subscription from './Subscription'
 
-import { sharedUpdater } from '../mutations/ClearCompletedTodoItemsMutation'
+import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
 
 const subscription = graphql`
   subscription TodoItemsRemovedSubscription(
@@ -37,7 +37,7 @@ export default class TodoItemsRemovedSubscription extends Subscription {
           const removedTodoItemIDs = payload.getValue('removedTodoItemIDs')
           const todoListProxy = payload.getLinkedRecord('todoList')
 
-          sharedUpdater(store, {
+          todoItemsRemovedUpdater(store, {
             todoListProxy,
             removedTodoItemIDs,
           })
