@@ -1,6 +1,9 @@
 Schema = GraphQL::Schema.define do
+  use Subscriptions::ActionCableSubscriptions
+
   query Types::QueryType
   mutation Mutations::MutationType
+  subscription Types::SubscriptionType
 
   id_from_object ->(object, type_definition, query_ctx) {
     GraphQL::Schema::UniqueWithinType.encode(type_definition.name, object.id)

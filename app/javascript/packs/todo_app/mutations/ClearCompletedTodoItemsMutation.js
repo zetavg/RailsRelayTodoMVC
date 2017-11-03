@@ -85,7 +85,7 @@ export default class ClearCompletedTodoItemsMutation extends Mutation {
   }
 }
 
-const sharedUpdater = (store, {
+export const sharedUpdater = (store, {
   todoListProxy,
   removedTodoItemIDs,
 }) => {

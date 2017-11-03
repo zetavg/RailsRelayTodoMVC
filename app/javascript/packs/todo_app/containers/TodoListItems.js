@@ -9,6 +9,12 @@ import { registerTodoListTodoItemsConnectionName } from '../registrations/todoLi
 
 import MarkAllTodoItemsMutation from '../mutations/MarkAllTodoItemsMutation'
 
+import TodoItemAddedSubscription from '../subscriptions/TodoItemAddedSubscription'
+import TodoItemUpdatedSubscription from '../subscriptions/TodoItemUpdatedSubscription'
+import TodoItemsUpdatedSubscription from '../subscriptions/TodoItemsUpdatedSubscription'
+import TodoItemRemovedSubscription from '../subscriptions/TodoItemRemovedSubscription'
+import TodoItemsRemovedSubscription from '../subscriptions/TodoItemsRemovedSubscription'
+
 class TodoListItemsContainer extends Component {
   static propTypes = {
     todoList: PropTypes.shape({
@@ -20,6 +26,32 @@ class TodoListItemsContainer extends Component {
       loadMore: PropTypes.func.isRequired,
       refetchConnection: PropTypes.func.isRequired,
     }).isRequired,
+  }
+
+  componentWillMount() {
+    const subscriptionParams = [environment, { variables: {
+        todoListID: this.props.todoList.id,
+      }
+    }]
+    this.todoItemAddedSubscription = new TodoItemAddedSubscription(...subscriptionParams)
+    this.todoItemUpdatedSubscription = new TodoItemUpdatedSubscription(...subscriptionParams)
+    this.todoItemsUpdatedSubscription = new TodoItemsUpdatedSubscription(...subscriptionParams)
+    this.todoItemRemovedSubscription = new TodoItemRemovedSubscription(...subscriptionParams)
+    this.todoItemsRemovedSubscription = new TodoItemsRemovedSubscription(...subscriptionParams)
+
+    this.todoItemAddedSubscription.subscribe()
+    this.todoItemUpdatedSubscription.subscribe()
+    this.todoItemsUpdatedSubscription.subscribe()
+    this.todoItemRemovedSubscription.subscribe()
+    this.todoItemsRemovedSubscription.subscribe()
+  }
+
+  componentWillUnmount() {
+    if (this.todoItemAddedSubscription) this.todoItemAddedSubscription.unsubscribe()
+    if (this.todoItemUpdatedSubscription) this.todoItemUpdatedSubscription.unsubscribe()
+    if (this.todoItemsUpdatedSubscription) this.todoItemsUpdatedSubscription.unsubscribe()
+    if (this.todoItemRemovedSubscription) this.todoItemRemovedSubscription.unsubscribe()
+    if (this.todoItemsRemovedSubscription) this.todoItemsRemovedSubscription.unsubscribe()
   }
 
   setFilter = (filter) => {
@@ -99,6 +131,7 @@ export default createPaginationContainer(
           hasNextPage
         }
         edges {
+          cursor
           node {
             id
             ...TodoItem_todoItem
