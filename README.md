@@ -30,7 +30,7 @@ The default port of the Rails Server is `5000`.
 ## TODOs
 
 - [ ] Refactor code
-- [ ] Use cached data while switching the todo items filter
+- [x] Use cached data while switching the todo items filter ([facebook/relay#2006](https://github.com/facebook/relay/issues/2006) explains this behavior, needs to dig on more about GC of Relay Modern Store)
 - [ ] Fix all optimistic updates
 - [ ] Use Relay Subscriptions with Action Cable to do realtime update
 - [ ] Resolve Rails n+1 query problem while executing an GraphQL query
