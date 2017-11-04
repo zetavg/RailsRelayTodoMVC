@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 
 import TodoListHeader from '../containers/TodoListHeader'
 import TodoListItemsWithFilter from '../containers/TodoListItemsWithFilter'

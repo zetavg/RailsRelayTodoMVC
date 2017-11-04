@@ -30,9 +30,9 @@ export default class TodoItemRemovedSubscription extends Subscription {
       {
         subscription,
         variables,
-        onCompleted: () => console.log('onCompleted'),
-        onError: error => { debugger; console.error(error)},
-        updater: store => {
+        onCompleted: () => { console.log('completed') },
+        onError: (error) => { console.error(error) },
+        updater: (store) => {
           const payload = store.getRootField('todoItemRemoved')
           const removedTodoItemID = payload.getValue('removedTodoItemID')
           const todoListProxy = payload.getLinkedRecord('todoList')
@@ -42,7 +42,7 @@ export default class TodoItemRemovedSubscription extends Subscription {
             removedTodoItemID,
           })
         },
-      }
+      },
     )
   }
 }

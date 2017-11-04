@@ -2,7 +2,9 @@
   "name": "RailsRelayTodoMVC",
   "private": true,
   "scripts": {
-    "relay": "relay-compiler --src ./app/javascript --schema ./schema.graphql"
+    "relay": "relay-compiler --src ./app/javascript --schema ./schema.graphql",
+    "eslint": "eslint app/javascript",
+    "flow": "flow"
   },
   "dependencies": {
     "autoprefixer": "^7.1.2",
@@ -12,12 +14,14 @@
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.7",
     "compression-webpack-plugin": "^1.0.0",
+    "core-js": "^2.5.1",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
@@ -36,11 +40,19 @@
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "validate.js": "^0.12.0",
     "webpack": "^3.4.1",
     "webpack-manifest-plugin": "^1.2.1",
     "webpack-merge": "^4.1.0"
   },
   "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "flow-bin": "^0.58.0",
     "relay-compiler": "1.x",
     "webpack-dev-server": "^2.6.1"
   }

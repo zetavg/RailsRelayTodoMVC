@@ -1,0 +1,14 @@
+[ignore]
+.*/__generated__/.*
+
+[include]
+app/javascript
+
+[libs]
+
+[lints]
+all=warn
+
+[options]
+
+[strict]

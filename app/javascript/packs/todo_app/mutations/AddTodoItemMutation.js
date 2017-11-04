@@ -1,107 +1,93 @@
-import {
-  commitMutation,
-  graphql,
-} from 'react-relay'
-import PropTypes from 'prop-types'
-import todoItemAddedUpdater from '../updaters/todoItemAddedUpdater'
-import Mutation from './Mutation'
+/* @flow */
 
-const mutation = graphql`
-  mutation AddTodoItemMutation($input: AddTodoItemInput!) {
-    addTodoItem(input: $input) {
-      todoListTodoItemsConnectionEdge {
-        __typename
-        cursor
-        node {
-          completed
-          id
-          name
-        }
-      }
-      todoList {
-        id
-        todoItemsCount
-        completedTodoItemsCount
-        activeTodoItemsCount
-      }
-    }
-  }
-`
+import { graphql } from 'react-relay'
+import type { RecordSourceSelectorProxy } from 'relay-runtime'
+import todoItemAddedUpdater from '../updaters/todoItemAddedUpdater'
+import Mutation from './_Mutation'
 
 let tempID = 0
 
-export default class AddTodoItemMutation extends Mutation {
-  static propTypes = {
-    todoListID: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    bool: PropTypes.bool,
-  }
+export type AddTodoItemInput = {
+  todoListID: string,
+  name: string,
+  completed: boolean,
+}
 
-  commit = () => {
-    const { environment, input } = this
-    const {
-      todoListID,
-      name,
-      completed,
-    } = input
-
-    return commitMutation(
-      environment,
-      {
-        mutation,
-        variables: {
-          input: {
-            clientMutationId: `${tempID++}`,
-            todoListID,
-            name,
-            completed,
-          },
-        },
-        updater: (store) => {
-          const payload = store.getRootField('addTodoItem')
-          const todoListTodoItemsConnectionEdge = payload.getLinkedRecord('todoListTodoItemsConnectionEdge')
-          const todoListProxy = payload.getLinkedRecord('todoList')
-
-          todoItemAddedUpdater(store, {
-            todoListProxy,
-            todoListTodoItemsConnectionEdge,
-          })
-        },
-        optimisticUpdater: (store) => {
-          const todoListProxy = store.get(todoListID)
-          const newTodoItemID = `client:newTodoItem:${tempID++}`
-          const newTodoItemNode = store.create(newTodoItemID, 'TodoItem')
-          newTodoItemNode.setValue(newTodoItemID, 'id')
-          newTodoItemNode.setValue(input.name, 'name')
-          newTodoItemNode.setValue(input.completed || false, 'completed')
-          const newTodoItemEdge = store.create(
-            `client:newTodoItemEdge:${tempID++}`,
-            'TodoItemEdge',
-          )
-          newTodoItemEdge.setLinkedRecord(newTodoItemNode, 'node')
-
-          todoItemAddedUpdater(store, {
-            todoListProxy,
-            todoListTodoItemsConnectionEdge: newTodoItemEdge,
-          })
-
-          todoListProxy.setValue(
-            todoListProxy.getValue('todoItemsCount') + 1,
-            'todoItemsCount',
-          )
-          if (completed) {
-            todoListProxy.setValue(
-              todoListProxy.getValue('completedTodoItemsCount') + 1,
-              'completedTodoItemsCount',
-            )
-          } else {
-            todoListProxy.setValue(
-              todoListProxy.getValue('activeTodoItemsCount') + 1,
-              'activeTodoItemsCount',
-            )
+export default class AddTodoItemMutation extends Mutation<AddTodoItemInput> {
+  static mutation = graphql`
+    mutation AddTodoItemMutation($input: AddTodoItemInput!) {
+      addTodoItem(input: $input) {
+        todoListTodoItemsConnectionEdge {
+          __typename
+          cursor
+          node {
+            completed
+            id
+            name
           }
-        },
+        }
+        todoList {
+          id
+          todoItemsCount
+          completedTodoItemsCount
+          activeTodoItemsCount
+        }
+      }
+    }
+  `
+
+  getMutationConfig() {
+    const { input } = this
+
+    return {
+      updater: (store: RecordSourceSelectorProxy) => {
+        const payload = store.getRootField('addTodoItem')
+        if (!payload) throw new Error('Cannot get addTodoItem')
+        const todoListTodoItemsConnectionEdge = payload.getLinkedRecord('todoListTodoItemsConnectionEdge')
+        if (!todoListTodoItemsConnectionEdge) throw new Error('Cannot get todoListTodoItemsConnectionEdge')
+        const todoListProxy = payload.getLinkedRecord('todoList')
+        if (!todoListProxy) throw new Error('Cannot get todoListProxy')
+
+        todoItemAddedUpdater(store, {
+          todoListProxy,
+          todoListTodoItemsConnectionEdge,
+        })
       },
-    )
+      optimisticUpdater: (store: RecordSourceSelectorProxy) => {
+        const todoListProxy = store.get(input.todoListID)
+        if (!todoListProxy) throw new Error(`Cannot get TodoList with ID: ${input.todoListID} from Relay store`)
+        const newTodoItemID = `client:newTodoItem:${tempID++}`
+        const newTodoItemNode = store.create(newTodoItemID, 'TodoItem')
+        newTodoItemNode.setValue(newTodoItemID, 'id')
+        newTodoItemNode.setValue(input.name, 'name')
+        newTodoItemNode.setValue(input.completed || false, 'completed')
+        const newTodoItemEdge = store.create(
+          `client:newTodoItemEdge:${tempID++}`,
+          'TodoItemEdge',
+        )
+        newTodoItemEdge.setLinkedRecord(newTodoItemNode, 'node')
+
+        todoItemAddedUpdater(store, {
+          todoListProxy,
+          todoListTodoItemsConnectionEdge: newTodoItemEdge,
+        })
+
+        todoListProxy.setValue(
+          parseInt(todoListProxy.getValue('todoItemsCount'), 10) + 1,
+          'todoItemsCount',
+        )
+        if (input.completed) {
+          todoListProxy.setValue(
+            parseInt(todoListProxy.getValue('completedTodoItemsCount'), 10) + 1,
+            'completedTodoItemsCount',
+          )
+        } else {
+          todoListProxy.setValue(
+            parseInt(todoListProxy.getValue('activeTodoItemsCount'), 10) + 1,
+            'activeTodoItemsCount',
+          )
+        }
+      },
+    }
   }
 }

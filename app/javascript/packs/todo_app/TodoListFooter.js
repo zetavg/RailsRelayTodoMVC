@@ -4,7 +4,7 @@ import environment from './relay/environment'
 
 import TodoListFooterContainer from './containers/TodoListFooter'
 
-const TodoListFooter = (todoListID) => (
+const TodoListFooter = todoListID => (
   <QueryRenderer
     environment={environment}
     query={graphql`

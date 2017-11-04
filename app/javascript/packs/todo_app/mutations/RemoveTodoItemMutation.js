@@ -1,89 +1,81 @@
-import {
-  commitMutation,
-  graphql,
-} from 'react-relay'
-import PropTypes from 'prop-types'
-import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
-import Mutation from './Mutation'
+/* @flow */
 
-const mutation = graphql`
-  mutation RemoveTodoItemMutation($input: RemoveTodoItemInput!) {
-    removeTodoItem(input: $input) {
-      removedTodoItem {
-        id
-      }
-      todoList {
-        id
-        todoItemsCount
-        completedTodoItemsCount
-        activeTodoItemsCount
+import { graphql } from 'react-relay'
+import type { DataID, RecordSourceSelectorProxy } from 'relay-runtime'
+import todoItemRemovedUpdater from '../updaters/todoItemRemovedUpdater'
+import Mutation from './_Mutation'
+
+export type RemoveTodoItemInput = {
+  todoItemID: DataID,
+  todoListID: DataID,
+}
+
+export default class RemoveTodoItemMutation extends Mutation<RemoveTodoItemInput> {
+  static mutation = graphql`
+    mutation RemoveTodoItemMutation($input: RemoveTodoItemInput!) {
+      removeTodoItem(input: $input) {
+        removedTodoItem {
+          id
+        }
+        todoList {
+          id
+          todoItemsCount
+          completedTodoItemsCount
+          activeTodoItemsCount
+        }
       }
     }
-  }
-`
+  `
 
-export default class MarkAllTodoItemsMutation extends Mutation {
-  static propTypes = {
-    todoItemID: PropTypes.string.isRequired,
-    todoListID: PropTypes.string,
-  }
+  getMutationConfig() {
+    const { input } = this
 
-  commit = () => {
-    const { environment, input } = this
-    const {
-      todoItemID,
-      todoListID,
-    } = input
+    return {
+      updater: (store: RecordSourceSelectorProxy) => {
+        const payload = store.getRootField('removeTodoItem')
+        if (!payload) throw new Error('Cannot get payload')
+        const todoListProxy = payload.getLinkedRecord('todoList')
+        if (!todoListProxy) throw new Error('Cannot get todoList')
+        if (!input.todoItemID) throw new Error('Error: input.todoItemID')
+        todoItemRemovedUpdater(store, {
+          todoListProxy,
+          removedTodoItemID: input.todoItemID,
+        })
+      },
+      optimisticUpdater: (store: RecordSourceSelectorProxy) => {
+        if (!input.todoListID) return
+        const todoListProxy = store.get(input.todoListID)
+        if (!todoListProxy) throw new Error('Cannot get todoList')
+        if (!input.todoItemID) throw new Error('Error: input.todoItemID')
 
-    return commitMutation(
-      environment,
-      {
-        mutation,
-        variables: {
-          input: {
-            todoItemID,
-          },
-        },
-        updater: (store) => {
-          const payload = store.getRootField('removeTodoItem')
-          const todoListProxy = payload.getLinkedRecord('todoList')
-          todoItemsRemovedUpdater(store, {
-            todoListProxy,
-            removedTodoItemID: todoItemID,
-          })
-        },
-        optimisticUpdater: (store) => {
-          if (!todoListID) return
-          const todoListProxy = store.get(todoListID)
+        todoItemRemovedUpdater(store, {
+          todoListProxy,
+          removedTodoItemID: input.todoItemID,
+        })
 
-          todoItemsRemovedUpdater(store, {
-            todoListProxy,
-            removedTodoItemID: todoItemID,
-          })
+        const todoItemProxy = store.get(input.todoItemID)
+        if (!todoItemProxy) throw new Error('Cannot get todoItem')
+        const todoListTodoItemsCount = todoListProxy.getValue('todoItemsCount')
+        if (typeof todoListTodoItemsCount === 'number') {
+          todoListProxy.setValue(todoListTodoItemsCount - 1, 'todoItemsCount')
+        }
 
-          const todoItemProxy = store.get(todoItemID)
-          const todoListTodoItemsCount = todoListProxy.getValue('todoItemsCount')
-          if (typeof todoListTodoItemsCount !== 'undefined') {
-            todoListProxy.setValue(todoListTodoItemsCount - 1, 'todoItemsCount')
-          }
-
-          const todoItemCompleted = todoItemProxy.getValue('completed')
-          if (typeof todoItemCompleted !== 'undefined') {
-            if (todoItemCompleted) {
-              const todoListCompletedTodoItemsCount = todoListProxy.getValue('completedTodoItemsCount')
-              if (typeof todoListCompletedTodoItemsCount !== 'undefined') {
-                todoListProxy.setValue(todoListCompletedTodoItemsCount - 1, 'completedTodoItemsCount')
-              }
-            } else {
-              const todoListActiveTodoItemsCount = todoListProxy.getValue('activeTodoItemsCount')
-              if (typeof todoListActiveTodoItemsCount !== 'undefined') {
-                todoListProxy.setValue(todoListActiveTodoItemsCount - 1, 'activeTodoItemsCount')
-              }
+        const todoItemCompleted = todoItemProxy.getValue('completed')
+        if (typeof todoItemCompleted !== 'undefined') {
+          if (todoItemCompleted) {
+            const todoListCompletedTodoItemsCount = todoListProxy.getValue('completedTodoItemsCount')
+            if (typeof todoListCompletedTodoItemsCount === 'number') {
+              todoListProxy.setValue(todoListCompletedTodoItemsCount - 1, 'completedTodoItemsCount')
+            }
+          } else {
+            const todoListActiveTodoItemsCount = todoListProxy.getValue('activeTodoItemsCount')
+            if (typeof todoListActiveTodoItemsCount === 'number') {
+              todoListProxy.setValue(todoListActiveTodoItemsCount - 1, 'activeTodoItemsCount')
             }
           }
-        },
+        }
       },
-    )
+    }
   }
 }
 

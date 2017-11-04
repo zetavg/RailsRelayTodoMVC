@@ -18,9 +18,7 @@ class TodoListFooterContainer extends Component {
     const { todoList } = this.props
 
     return new ClearCompletedTodoItemsMutation(environment, {
-      input: {
-        todoListID: todoList.id,
-      },
+      todoListID: todoList.id,
     })
   }
 

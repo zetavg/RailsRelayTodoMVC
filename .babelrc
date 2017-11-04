@@ -11,10 +11,11 @@
         "useBuiltIns": true
       }
     ],
+    "flow",
     "react"
   ],
   "plugins": [
-    ["transform-object-rest-spread"],
+    "transform-object-rest-spread",
     "relay",
     "syntax-dynamic-import",
     [

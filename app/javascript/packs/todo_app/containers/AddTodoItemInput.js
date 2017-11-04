@@ -26,9 +26,7 @@ class AddTodoItemInputContainer extends Component {
     const { todoList } = this.props
 
     return new AddTodoItemMutation(environment, {
-      input: {
-        todoListID: todoList.id,
-      },
+      todoListID: todoList.id,
     })
   }
 

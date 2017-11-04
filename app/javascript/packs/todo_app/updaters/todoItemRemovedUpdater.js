@@ -1,9 +1,19 @@
+/* @flow */
+
 import { ConnectionHandler } from 'relay-runtime'
+import type {
+  DataID,
+  RelayRecordSourceSelectorProxy,
+  RelayRecordProxy,
+} from 'relay-runtime'
 import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
 
-const todoItemsRemovedUpdater = (store, {
+const todoItemRemovedUpdater = (store: RelayRecordSourceSelectorProxy, {
   todoListProxy,
-  removedTodoItemIDs,
+  removedTodoItemID,
+}: {
+  todoListProxy: RelayRecordProxy,
+  removedTodoItemID: DataID,
 }) => {
   todoListTodoItemsConnectionNames.forEach((connName) => {
     ['all', 'active', 'completed'].forEach((filter) => {
@@ -13,9 +23,9 @@ const todoItemsRemovedUpdater = (store, {
         { filter },
       )
       if (!conn) return
-      removedTodoItemIDs.forEach(removedID => ConnectionHandler.deleteNode(conn, removedID))
+      ConnectionHandler.deleteNode(conn, removedTodoItemID)
     })
   })
 }
 
-export default todoItemsRemovedUpdater
+export default todoItemRemovedUpdater

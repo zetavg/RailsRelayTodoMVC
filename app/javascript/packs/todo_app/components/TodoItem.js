@@ -6,6 +6,7 @@ const ENTER_KEY_CODE = 13
 export default class TodoItem extends Component {
   static propTypes = {
     todoItem: PropTypes.shape({
+      id: PropTypes.string.isRequired,
       completed: PropTypes.bool.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
@@ -65,12 +66,14 @@ export default class TodoItem extends Component {
       >
         <div className="view">
           <input
+            id={`todo-item-${todoItem.id}`}
             className="toggle"
             type="checkbox"
             onChange={this._handleToggleChange}
             checked={todoItem.completed}
           />
           <label
+            htmlFor={`todo-item-${todoItem.id}`}
             onDoubleClick={this._handleLabelDoubleClick}
           >
             {todoItem.name}

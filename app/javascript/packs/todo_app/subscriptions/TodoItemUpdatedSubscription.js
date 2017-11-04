@@ -32,9 +32,9 @@ export default class TodoItemUpdatedSubscription extends Subscription {
       {
         subscription,
         variables,
-        onCompleted: () => console.log('onCompleted'),
-        onError: error => { debugger; console.error(error)},
-      }
+        onCompleted: () => { console.log('completed') },
+        onError: (error) => { console.error(error) },
+      },
     )
   }
 }

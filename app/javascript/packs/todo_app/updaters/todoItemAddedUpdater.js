@@ -1,9 +1,18 @@
+/* @flow */
+
 import { ConnectionHandler } from 'relay-runtime'
+import type {
+  RelayRecordSourceSelectorProxy,
+  RelayRecordProxy,
+} from 'relay-runtime'
 import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
 
-const todoItemAddedUpdater = (store, {
+const todoItemAddedUpdater = (store: RelayRecordSourceSelectorProxy, {
   todoListProxy,
   todoListTodoItemsConnectionEdge,
+}: {
+  todoListProxy: RelayRecordProxy,
+  todoListTodoItemsConnectionEdge: RelayRecordProxy,
 }) => {
   todoListTodoItemsConnectionNames.forEach((connName) => {
     ['all', 'active', 'completed'].forEach((filter) => {
@@ -14,7 +23,9 @@ const todoItemAddedUpdater = (store, {
       )
       if (!conn) return
 
-      const completed = todoListTodoItemsConnectionEdge.getLinkedRecord('node').getValue('completed')
+      const todoItemNode = todoListTodoItemsConnectionEdge.getLinkedRecord('node')
+      if (!todoItemNode) throw new Error('Cannot get node from todoListTodoItemsConnectionEdge')
+      const completed = todoItemNode.getValue('completed')
 
       if (
         (filter === 'all') ||

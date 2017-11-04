@@ -29,9 +29,10 @@ class TodoListItemsContainer extends Component {
   }
 
   componentWillMount() {
-    const subscriptionParams = [environment, { variables: {
+    const subscriptionParams = [environment, {
+      variables: {
         todoListID: this.props.todoList.id,
-      }
+      },
     }]
     this.todoItemAddedSubscription = new TodoItemAddedSubscription(...subscriptionParams)
     this.todoItemUpdatedSubscription = new TodoItemUpdatedSubscription(...subscriptionParams)
@@ -74,9 +75,9 @@ class TodoListItemsContainer extends Component {
 
   refresh = () => {
     if (this.props.relay.isLoading()) return
-    this.setState({ refreshing: true })
+    // this.setState({ refreshing: true })
     this.props.relay.refetchConnection(10, () => {
-      this.setState({ refreshing: false })
+      // this.setState({ refreshing: false })
     })
   }
 
@@ -84,10 +85,8 @@ class TodoListItemsContainer extends Component {
     const { todoList } = this.props
 
     return new MarkAllTodoItemsMutation(environment, {
-      input: {
-        todoListID: todoList.id,
-        completed,
-      },
+      todoListID: todoList.id,
+      completed,
     })
   }
 

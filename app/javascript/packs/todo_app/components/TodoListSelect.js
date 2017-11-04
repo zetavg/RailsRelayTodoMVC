@@ -5,14 +5,12 @@ export default class TodoListSelect extends Component {
   static propTypes = {
     todoListHolder: PropTypes.shape({
       todoLists: PropTypes.shape({
-        edges: PropTypes.arrayOf(
-          PropTypes.shape({
-            node: PropTypes.shape({
-              id: PropTypes.string.isRequired,
-              name: PropTypes.string.isRequired,
-            }).isRequired,
+        edges: PropTypes.arrayOf(PropTypes.shape({
+          node: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
           }).isRequired,
-        ).isRequired,
+        }).isRequired).isRequired,
       }).isRequired,
     }).isRequired,
     onChangeID: PropTypes.func,

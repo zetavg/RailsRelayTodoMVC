@@ -31,11 +31,9 @@ class TodoItemContainer extends Component {
     const { todoItem } = this.props
 
     return new UpdateTodoItemMutation(environment, {
-      input: {
-        todoItemID: todoItem.id,
-        name,
-        completed,
-      },
+      todoItemID: todoItem.id,
+      name,
+      completed,
     })
   }
 
@@ -51,7 +49,7 @@ class TodoItemContainer extends Component {
 
   _handleSubmitNameEditing = () => {
     const { updateNameMutation } = this.state
-    if (updateNameMutation.isValid()) {
+    if (updateNameMutation.isValid {
       updateNameMutation.commit()
     } else {
       updateNameMutation.updateInput({ name: this.props.todoItem.name })
@@ -63,10 +61,8 @@ class TodoItemContainer extends Component {
     const { todoItem } = this.props
 
     return new RemoveTodoItemMutation(environment, {
-      input: {
-        todoItemID: todoItem.id,
-        todoListID: todoItem.todoList && todoItem.todoList.id,
-      },
+      todoItemID: todoItem.id,
+      todoListID: todoItem.todoList && todoItem.todoList.id,
     })
   }
 

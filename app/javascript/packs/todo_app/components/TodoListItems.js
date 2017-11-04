@@ -8,13 +8,11 @@ export default class TodoListItems extends Component {
       todoItemsCount: PropTypes.number.isRequired,
       completedTodoItemsCount: PropTypes.number.isRequired,
       todoItems: PropTypes.shape({
-        edges: PropTypes.arrayOf(
-          PropTypes.shape({
-            node: PropTypes.shape({
-              id: PropTypes.string.isRequired,
-            }).isRequired,
+        edges: PropTypes.arrayOf(PropTypes.shape({
+          node: PropTypes.shape({
+            id: PropTypes.string.isRequired,
           }).isRequired,
-        ).isRequired,
+        }).isRequired).isRequired,
       }).isRequired,
     }).isRequired,
     onLoadMoreTriggered: PropTypes.func.isRequired,
@@ -25,7 +23,7 @@ export default class TodoListItems extends Component {
     super(props, context)
 
     this.state = {
-      refreshing: false,
+      // refreshing: false,
     }
   }
 
@@ -64,7 +62,9 @@ export default class TodoListItems extends Component {
           onChange={this._handleToggleAllChange}
           checked={todoList.todoItemsCount === todoList.completedTodoItemsCount}
         />
-        <label htmlFor="toggle-all">Mark all as complete</label>
+        <label htmlFor="toggle-all">
+          Mark all as complete
+        </label>
         <ul className="todo-list">
           {todoItems.edges.map(edge => <TodoItem key={edge.node.id} todoItem={edge.node} />)}
         </ul>
