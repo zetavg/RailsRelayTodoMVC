@@ -32,9 +32,9 @@ export default class RemoveTodoItemMutation extends Mutation<RemoveTodoItemInput
     todoItemID: {
       presence: true,
     },
-    todoListID: {
-      presence: true,
-    },
+    // todoListID: {
+    //   presence: true,
+    // },
   }
 
   getMutationConfig() {
