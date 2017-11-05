@@ -1,4 +1,4 @@
-# Rails + Relay TodoMVC
+# Rails + Relay TodoMVC [![Build Status](https://travis-ci.org/zetavg/RailsRelayTodoMVC.svg?branch=master)](https://travis-ci.org/zetavg/RailsRelayTodoMVC)
 
 This project demonstrates to expose an Relay-compatible GraphQL API with [graphql-ruby](https://github.com/rmosolgo/graphql-ruby) from an existing Rails app, and to build a React app with Relay which uses the GraphQL API.
 

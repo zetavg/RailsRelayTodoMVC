@@ -1,0 +1,25 @@
+sudo: false
+language: ruby
+rvm: 2.4.0
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - ~/.rvm/gems/ruby-2.4.0
+    - ~/.nvm
+    - node_modules
+env:
+  - TEST_SCRIPT='yarn run flow'
+  - TEST_SCRIPT='yarn run eslint'
+before_install:
+  - "gem update --system"
+  - "echo 'gem: --no-document' > ~/.gemrc"
+  - "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash"
+  - "export NVM_DIR=\"$HOME/.nvm\""
+  - ". \"$NVM_DIR/nvm.sh\""
+  - "nvm install 8.0.0"
+  - "nvm use 8.0.0"
+  - "npm install -g yarn"
+install:
+  - travis_retry bin/setup
+script: $TEST_SCRIPT

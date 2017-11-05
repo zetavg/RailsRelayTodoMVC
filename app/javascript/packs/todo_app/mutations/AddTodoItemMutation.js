@@ -61,7 +61,7 @@ export default class AddTodoItemMutation extends Mutation<AddTodoItemInput> {
       },
       optimisticUpdater: (store: RecordSourceSelectorProxy) => {
         const todoListProxy = store.get(input.todoListID)
-        if (!todoListProxy) throw new Error(`Cannot get TodoList with ID: ${input.todoListID} from Relay store`)
+        if (!todoListProxy) throw new Error('Cannot get TodoList from Relay store')
         const newTodoItemID = `client:newTodoItem:${tempID++}`
         const newTodoItemNode = store.create(newTodoItemID, 'TodoItem')
         newTodoItemNode.setValue(newTodoItemID, 'id')
