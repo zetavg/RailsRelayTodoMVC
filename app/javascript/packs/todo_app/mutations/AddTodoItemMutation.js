@@ -8,9 +8,9 @@ import Mutation from './_Mutation'
 let tempID = 0
 
 export type AddTodoItemInput = {
-  todoListID: string,
-  name: string,
-  completed: boolean,
+  todoListID?: string,
+  name?: string,
+  completed?: boolean,
 }
 
 export default class AddTodoItemMutation extends Mutation<AddTodoItemInput> {
@@ -35,6 +35,12 @@ export default class AddTodoItemMutation extends Mutation<AddTodoItemInput> {
       }
     }
   `
+
+  static constraints = {
+    name: {
+      presence: { allowEmpty: false },
+    },
+  }
 
   getMutationConfig() {
     const { input } = this

@@ -6,8 +6,8 @@ import todoItemRemovedUpdater from '../updaters/todoItemRemovedUpdater'
 import Mutation from './_Mutation'
 
 export type RemoveTodoItemInput = {
-  todoItemID: DataID,
-  todoListID: DataID,
+  todoItemID?: DataID,
+  todoListID?: DataID,
 }
 
 export default class RemoveTodoItemMutation extends Mutation<RemoveTodoItemInput> {
@@ -26,6 +26,16 @@ export default class RemoveTodoItemMutation extends Mutation<RemoveTodoItemInput
       }
     }
   `
+
+  static constraints = {
+    // TODO: add async validation to ensure todo list and todo item with the id exists
+    todoItemID: {
+      presence: true,
+    },
+    todoListID: {
+      presence: true,
+    },
+  }
 
   getMutationConfig() {
     const { input } = this

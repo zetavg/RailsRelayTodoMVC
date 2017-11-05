@@ -66,14 +66,12 @@ export default class TodoItem extends Component {
       >
         <div className="view">
           <input
-            id={`todo-item-${todoItem.id}`}
             className="toggle"
             type="checkbox"
             onChange={this._handleToggleChange}
             checked={todoItem.completed}
           />
           <label
-            htmlFor={`todo-item-${todoItem.id}`}
             onDoubleClick={this._handleLabelDoubleClick}
           >
             {todoItem.name}

@@ -14,7 +14,10 @@
     "max-len": ["warn", 120],
     "quote-props": ["warn"],
     "class-methods-use-this": ["warn"],
-    "no-underscore-dangle": ["warn"],
+    "no-underscore-dangle": ["warn", {
+      "allowAfterThis": true,
+      "allowAfterSuper": true
+    }],
     "import/no-extraneous-dependencies": ["off"],
     "react/jsx-filename-extension": ["off"],
     "react/jsx-no-bind": ["warn"],

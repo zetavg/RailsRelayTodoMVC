@@ -119,7 +119,7 @@ export default class Mutation<T: Input> {
       ...input,
       ...inputChanges,
     }
-    const newMutation = this.constructor(environment, newInput)
+    const newMutation = new this.constructor(environment, newInput)
 
     return newMutation
   }
@@ -168,6 +168,13 @@ export default class Mutation<T: Input> {
    * Commit the mutation.
    */
   commit = (): void => {
+    if (!this.isValid) {
+      const { errors } = this
+      const fullMessage =
+        Object.keys(errors).map(k => errors[k].join(', ')).join(', ')
+      throw new MutationValidationError(fullMessage)
+    }
+
     const { mutation, inputName } = this.constructor
     if (!mutation) throw new Error(`The mutation of ${this.constructor.name} is undefined`)
     const { environment, input } = this
@@ -200,3 +207,5 @@ export type AdditionalMutationConfig = $Diff<MutationConfig, {
   mutation: GraphQLTaggedNode,
   variables: Variables,
 }> & { variables?: Variables }
+
+class MutationValidationError extends Error {}

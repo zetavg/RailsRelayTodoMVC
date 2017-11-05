@@ -2,12 +2,13 @@
 
 import { graphql } from 'react-relay'
 import type { DataID } from 'relay-runtime'
+import validate from 'validate.js'
 import Mutation from './_Mutation'
 
 export type UpdateTodoItemInput = {
-  todoItemID: DataID,
-  name: string,
-  completed: boolean,
+  todoItemID?: DataID,
+  name?: string,
+  completed?: boolean,
 }
 
 export default class UpdateTodoItemMutation extends Mutation<UpdateTodoItemInput> {
@@ -27,6 +28,20 @@ export default class UpdateTodoItemMutation extends Mutation<UpdateTodoItemInput
       }
     }
   `
+
+  static constraints = {
+    // TODO: add async validation to ensure todo item with the id exists
+    todoItemID: {
+      presence: true,
+    },
+    name: (value) => {
+      if (!validate.isDefined(value)) return {}
+
+      return {
+        presence: { allowEmpty: false },
+      }
+    },
+  }
 
   getMutationConfig() {
     const { input } = this

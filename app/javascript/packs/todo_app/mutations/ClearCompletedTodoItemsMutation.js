@@ -8,7 +8,7 @@ import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
 import Mutation from './_Mutation'
 
 export type ClearCompletedTodoItemsInput = {
-  todoListID: string,
+  todoListID?: string,
 }
 
 export default class ClearCompletedTodoItemsMutation extends Mutation<ClearCompletedTodoItemsInput> {
@@ -26,6 +26,13 @@ export default class ClearCompletedTodoItemsMutation extends Mutation<ClearCompl
       }
     }
   `
+
+  static constraints = {
+    // TODO: add async validation to ensure todo list with the id exists
+    todoListID: {
+      presence: true,
+    },
+  }
 
   getMutationConfig() {
     const { input } = this

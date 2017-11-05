@@ -4,7 +4,7 @@ import { graphql } from 'react-relay'
 import Mutation from './_Mutation'
 
 export type MarkAllTodoItemsInput = {
-  todoListID: string,
+  todoListID?: string,
 }
 
 export default class MarkAllTodoItemsMutation extends Mutation<MarkAllTodoItemsInput> {
@@ -23,4 +23,11 @@ export default class MarkAllTodoItemsMutation extends Mutation<MarkAllTodoItemsI
       }
     }
   `
+
+  static constraints = {
+    // TODO: add async validation to ensure todo list with the id exists
+    todoListID: {
+      presence: true,
+    },
+  }
 }

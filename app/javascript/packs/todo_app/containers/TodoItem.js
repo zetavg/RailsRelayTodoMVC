@@ -12,6 +12,7 @@ class TodoItemContainer extends Component {
   static propTypes = {
     todoItem: PropTypes.shape({
       id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
       todoList: PropTypes.shape({
         id: PropTypes.string.isRequired,
       }),
@@ -49,11 +50,13 @@ class TodoItemContainer extends Component {
 
   _handleSubmitNameEditing = () => {
     const { updateNameMutation } = this.state
-    if (updateNameMutation.isValid {
+
+    if (updateNameMutation.isValid) {
       updateNameMutation.commit()
     } else {
-      updateNameMutation.updateInput({ name: this.props.todoItem.name })
-      this.setState({ updateNameMutation })
+      this.setState({
+        updateNameMutation: updateNameMutation.updateInput({ name: this.props.todoItem.name }),
+      })
     }
   }
 
