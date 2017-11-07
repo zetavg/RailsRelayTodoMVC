@@ -1,7 +1,7 @@
 /* @flow */
 
 import { commitMutation } from 'react-relay'
-import type { GraphQLTaggedNode, MutationConfig, Variables } from 'react-relay'
+import type { MutationConfig } from 'react-relay'
 import type { RelayEnvironment } from 'relay-runtime'
 import validate from 'validate.js'
 import type { Constraints } from 'validate.js'
@@ -9,18 +9,32 @@ import type { Constraints } from 'validate.js'
 /**
  * Type defination of a typical input object.
  */
-export type Input = {
-  [string]: any
+export type Input = {|
+  [string]: any,
+|};
+
+/**
+ * Defination for validation errors.
+ */
+export type ValidationErrors = { [key: string]: Array<string> };
+
+class MutationValidationError extends Error {
+  object: ValidationErrors
+
+  constructor(message: string, object: ValidationErrors) {
+    super(message)
+    this.object = object
+  }
 }
 
 /**
  * A base abstract Mutation class to support input validation.
  */
-export default class Mutation<T: Input> {
+export default class Mutation<T = Input> {
   /**
    * Default input
    */
-  static defaultInput = {}
+  static defaultInput = ({}: $Shape<T>)
 
   /**
    * Constraints that is used for validate.js
@@ -41,11 +55,40 @@ export default class Mutation<T: Input> {
    * Mutation configurations
    * @see {@link https://facebook.github.io/relay/docs/mutations.html|Relay Mutations}
    */
-  getMutationConfig(): AdditionalMutationConfig {
-    return ({}: AdditionalMutationConfig)
+  getMutationConfig(): $Shape<MutationConfig> {
+    return (this.constructor.mutationConfig)
   }
 
-  _input: T
+  static mutationConfig = ({}: $Shape<MutationConfig>)
+
+  /**
+   * A static function to update the input of a given mutation
+   *
+   * @param {Mutation} mutation - A mutation.
+   * @param {Input} inputChanges - An object that contains the input of mutation.
+   * @returns {Mutation}
+   */
+  static updateInput<MT: $Supertype<Mutation<*>>>(mutation: MT, inputChanges: $Shape<T>): MT {
+    if (
+      !mutation ||
+      !mutation.environment ||
+      typeof mutation.input !== 'object' ||
+      typeof mutation.constructor !== 'function'
+    ) {
+      const message = `${this.name}.updateInput accepts a mutation object as the first argument, ` +
+                      'and the changes as the second argument.'
+      throw new Error(message)
+    }
+
+    const newInput = {
+      ...mutation.input,
+      ...inputChanges,
+    }
+
+    return new mutation.constructor(mutation.environment, newInput)
+  }
+
+  _input: $Shape<T>
   _environment: RelayEnvironment
 
   _validated: boolean
@@ -58,14 +101,14 @@ export default class Mutation<T: Input> {
    * @param {RelayEnvironment} environment - The Relay Environment.
    * @param {Input} input - An object that contains the input of mutation.
    */
-  constructor(environment: RelayEnvironment, input?: T) {
+  constructor(environment: RelayEnvironment, input?: $Shape<T>) {
     const { defaultInput } = this.constructor
 
     this._environment = environment
-    this._input = {
+    this._input = Object.freeze({
       ...defaultInput,
       ...input,
-    }
+    })
     this._validated = false
   }
 
@@ -83,7 +126,7 @@ export default class Mutation<T: Input> {
    *
    * $FlowFixMe
    */
-  get input(): T {
+  get input(): $Shape<T> {
     return this._input
   }
 
@@ -102,41 +145,23 @@ export default class Mutation<T: Input> {
    *
    * $FlowFixMe
    */
-  get isValid(): boolean {
+  get isValid(): Promise<boolean> {
     this._validate()
     return !this._errors
   }
 
   /**
-   * Update input and get a new Mutation object
-   * (since Mutation objects should be immutable).
-   *
-   * @param {Input} inputChanges - The changes to be updated to input.
-   */
-  updateInput = (inputChanges: T) => {
-    const { environment, input } = this
-    const newInput: T = {
-      ...input,
-      ...inputChanges,
-    }
-    const newMutation = new this.constructor(environment, newInput)
-
-    return newMutation
-  }
-
-  /**
    * Getter of async validation errors.
    */
-  getIsValidAsync = async (): boolean => {
+  getIsValidAsync = async (): Promise<boolean> => {
     const errors = await this._validateAsync()
-    // $FlowFixMe
     return !errors
   }
 
   /**
    * Getter of async valid status.
    */
-  getErrorsAsync = async (): ValidationErrors => {
+  getErrorsAsync = async (): Promise<ValidationErrors> => {
     const errors = await this._validateAsync()
     return errors
   }
@@ -167,12 +192,15 @@ export default class Mutation<T: Input> {
   /**
    * Commit the mutation.
    */
-  commit = (): void => {
+  commit = (options?: {| throw?: boolean |}): void => {
     if (!this.isValid) {
-      const { errors } = this
-      const fullMessage =
-        Object.keys(errors).map(k => errors[k].join(', ')).join(', ')
-      throw new MutationValidationError(fullMessage)
+      if (!options || options.throw !== false) {
+        const { errors } = this
+        const fullMessage =
+          Object.keys(errors).map(k => errors[k].join(', ')).join(', ')
+        throw new MutationValidationError(fullMessage, errors)
+      }
+      return
     }
 
     const { mutation, inputName } = this.constructor
@@ -193,19 +221,3 @@ export default class Mutation<T: Input> {
     )
   }
 }
-
-/**
- * Type defination of a validation errors object.
- */
-export type ValidationErrors = { [key: string]: Array<string> }
-
-/**
- * Mutation configurations without required props.
- */
-/* eslint-disable no-undef */
-export type AdditionalMutationConfig = $Diff<MutationConfig, {
-  mutation: GraphQLTaggedNode,
-  variables: Variables,
-}> & { variables?: Variables }
-
-class MutationValidationError extends Error {}

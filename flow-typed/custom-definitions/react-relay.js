@@ -51,6 +51,7 @@ declare module 'react-relay' {
 
   /* Ignored types */
   declare export type GraphQLTaggedNode = any;
-  declare export function graphql(any): any;
+  declare export function graphql(...args: any): any;
   declare export type RerunParam = any;
+  declare export function createFragmentContainer(...args: any): any;
 }

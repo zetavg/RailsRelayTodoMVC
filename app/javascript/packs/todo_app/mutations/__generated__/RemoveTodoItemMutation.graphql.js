@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash f4e3b76ba3c8b97b3ddb0e29322057b3
+ * @relayHash a2d7f21df17c2130011a7ee089e8ea94
  */
 
 /* eslint-disable */
@@ -13,6 +13,7 @@ export type RemoveTodoItemMutationVariables = {|
   input: {
     clientMutationId?: ?string;
     todoItemID: string;
+    todoListID?: ?string;
   };
 |};
 export type RemoveTodoItemMutationResponse = {|

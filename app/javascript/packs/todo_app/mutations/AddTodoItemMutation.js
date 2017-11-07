@@ -1,17 +1,17 @@
 /* @flow */
 
 import { graphql } from 'react-relay'
-import type { RecordSourceSelectorProxy } from 'relay-runtime'
+import type { DataID, RecordSourceSelectorProxy } from 'relay-runtime'
 import todoItemAddedUpdater from '../updaters/todoItemAddedUpdater'
 import Mutation from './_Mutation'
 
 let tempID = 0
 
-export type AddTodoItemInput = {
-  todoListID?: string,
-  name?: string,
+export type AddTodoItemInput = {|
+  todoListID: DataID,
+  name: string,
   completed?: boolean,
-}
+|};
 
 export default class AddTodoItemMutation extends Mutation<AddTodoItemInput> {
   static mutation = graphql`

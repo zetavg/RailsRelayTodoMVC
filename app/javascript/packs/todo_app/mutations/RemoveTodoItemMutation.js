@@ -5,10 +5,10 @@ import type { DataID, RecordSourceSelectorProxy } from 'relay-runtime'
 import todoItemRemovedUpdater from '../updaters/todoItemRemovedUpdater'
 import Mutation from './_Mutation'
 
-export type RemoveTodoItemInput = {
-  todoItemID?: DataID,
+export type RemoveTodoItemInput = {|
+  todoItemID: DataID,
   todoListID?: DataID,
-}
+|};
 
 export default class RemoveTodoItemMutation extends Mutation<RemoveTodoItemInput> {
   static mutation = graphql`

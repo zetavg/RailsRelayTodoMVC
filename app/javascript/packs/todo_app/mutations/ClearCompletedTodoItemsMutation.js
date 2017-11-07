@@ -2,14 +2,14 @@
 
 import { graphql } from 'react-relay'
 import { ConnectionHandler } from 'relay-runtime'
-import type { RecordSourceSelectorProxy } from 'relay-runtime'
+import type { DataID, RecordSourceSelectorProxy } from 'relay-runtime'
 import todoListTodoItemsConnectionNames from '../registrations/todoListTodoItemsConnectionNames'
 import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
 import Mutation from './_Mutation'
 
-export type ClearCompletedTodoItemsInput = {
-  todoListID?: string,
-}
+export type ClearCompletedTodoItemsInput = {|
+  todoListID: DataID,
+|};
 
 export default class ClearCompletedTodoItemsMutation extends Mutation<ClearCompletedTodoItemsInput> {
   static mutation = graphql`

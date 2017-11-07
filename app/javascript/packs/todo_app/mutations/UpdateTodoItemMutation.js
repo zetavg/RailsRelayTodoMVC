@@ -5,11 +5,11 @@ import type { DataID } from 'relay-runtime'
 import validate from 'validate.js'
 import Mutation from './_Mutation'
 
-export type UpdateTodoItemInput = {
-  todoItemID?: DataID,
+export type UpdateTodoItemInput = {|
+  todoItemID: DataID,
   name?: string,
   completed?: boolean,
-}
+|};
 
 export default class UpdateTodoItemMutation extends Mutation<UpdateTodoItemInput> {
   static mutation = graphql`

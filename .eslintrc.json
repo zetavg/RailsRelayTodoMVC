@@ -37,6 +37,10 @@
   "plugins": [
     "react"
   ],
+  "globals": {
+    "$Supertype": true,
+    "$Shape": true
+  },
   "settings": {
     "import/resolve": {
       "moduleDirectory": ["node_modules", "src", "app"]

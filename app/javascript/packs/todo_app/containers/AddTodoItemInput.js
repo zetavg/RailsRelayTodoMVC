@@ -1,13 +1,26 @@
+/* @flow */
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { graphql, createFragmentContainer } from 'react-relay'
+import type { DataID } from 'react-relay'
 import environment from '../relay/environment'
 
 import AddTodoItemInputComponent from '../components/AddTodoItemInput'
 
 import AddTodoItemMutation from '../mutations/AddTodoItemMutation'
 
-class AddTodoItemInputContainer extends Component {
+type Props = {|
+  todoList: {
+    id: DataID,
+  },
+|};
+
+type State = {
+  mutation: AddTodoItemMutation,
+};
+
+class AddTodoItemInputContainer extends Component<Props, State> {
   static propTypes = {
     todoList: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -32,7 +45,9 @@ class AddTodoItemInputContainer extends Component {
 
   _handleTodoItemNameChange = (todoItemName) => {
     const { mutation } = this.state
-    this.setState({ mutation: mutation.updateInput({ name: todoItemName }) })
+    this.setState({
+      mutation: AddTodoItemMutation.updateInput(mutation, { name: todoItemName }),
+    })
   }
 
   _handleSubmitEditing = () => {

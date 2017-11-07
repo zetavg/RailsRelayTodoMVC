@@ -1,6 +1,8 @@
+/* @flow */
+
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { graphql, createFragmentContainer } from 'react-relay'
+import type { DataID } from 'react-relay'
 import environment from '../relay/environment'
 
 import TodoItemComponent from '../components/TodoItem'
@@ -8,17 +10,21 @@ import TodoItemComponent from '../components/TodoItem'
 import UpdateTodoItemMutation from '../mutations/UpdateTodoItemMutation'
 import RemoveTodoItemMutation from '../mutations/RemoveTodoItemMutation'
 
-class TodoItemContainer extends Component {
-  static propTypes = {
-    todoItem: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      todoList: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-      }),
-    }).isRequired,
-  }
+type Props = {|
+  todoItem: {
+    id: DataID,
+    name: string,
+    todoList: {
+      id: DataID,
+    },
+  },
+|};
 
+type State = {
+  updateNameMutation: UpdateTodoItemMutation,
+};
+
+class TodoItemContainer extends Component<Props, State> {
   constructor(props, context) {
     super(props, context)
 
@@ -28,13 +34,12 @@ class TodoItemContainer extends Component {
     }
   }
 
-  _getNewUpdateTodoItemMutation = ({ name, completed }) => {
+  _getNewUpdateTodoItemMutation = (input) => {
     const { todoItem } = this.props
 
     return new UpdateTodoItemMutation(environment, {
       todoItemID: todoItem.id,
-      name,
-      completed,
+      ...input,
     })
   }
 
@@ -45,7 +50,7 @@ class TodoItemContainer extends Component {
 
   _handleEditNameChangeText = (name) => {
     const { updateNameMutation } = this.state
-    this.setState({ updateNameMutation: updateNameMutation.updateInput({ name }) })
+    this.setState({ updateNameMutation: UpdateTodoItemMutation.updateInput(updateNameMutation, { name }) })
   }
 
   _handleSubmitNameEditing = () => {
@@ -55,7 +60,7 @@ class TodoItemContainer extends Component {
       updateNameMutation.commit()
     } else {
       this.setState({
-        updateNameMutation: updateNameMutation.updateInput({ name: this.props.todoItem.name }),
+        updateNameMutation: UpdateTodoItemMutation.updateInput(updateNameMutation, { name: this.props.todoItem.name }),
       })
     }
   }

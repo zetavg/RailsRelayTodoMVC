@@ -1,11 +1,12 @@
 /* @flow */
 
 import { graphql } from 'react-relay'
+import type { DataID } from 'relay-runtime'
 import Mutation from './_Mutation'
 
-export type MarkAllTodoItemsInput = {
-  todoListID?: string,
-}
+export type MarkAllTodoItemsInput = {|
+  todoListID: DataID,
+|};
 
 export default class MarkAllTodoItemsMutation extends Mutation<MarkAllTodoItemsInput> {
   static mutation = graphql`
