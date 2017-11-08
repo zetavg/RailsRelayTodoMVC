@@ -136,6 +136,9 @@ declare module 'relay-runtime' {
   declare export type RecordState = any;
   declare export type Selector = any;
   declare export type Snapshot = any;
+  declare export type ConcreteFragment = any;
+  declare export type ConcreteBatch = any;
+
 
 
 

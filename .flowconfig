@@ -1,5 +1,4 @@
 [ignore]
-.*/__generated__/.*
 
 [include]
 app/javascript

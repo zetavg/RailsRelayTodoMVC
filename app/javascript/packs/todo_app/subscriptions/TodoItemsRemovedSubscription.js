@@ -1,48 +1,47 @@
-import {
-  requestSubscription,
-  graphql,
-} from 'react-relay'
-import Subscription from './Subscription'
+/* @flow */
+
+import { graphql } from 'react-relay'
+import type { RecordSourceSelectorProxy } from 'relay-runtime'
+import Subscription from './_Subscription'
+
+import type { TodoItemsRemovedSubscriptionVariables } from './__generated__/TodoItemsRemovedSubscription.graphql'
 
 import todoItemsRemovedUpdater from '../updaters/todoItemsRemovedUpdater'
 
-const subscription = graphql`
-  subscription TodoItemsRemovedSubscription(
-    $todoListID: ID!
-  ) {
-    todoItemsRemoved(todoListID: $todoListID) {
-      removedTodoItemIDs
-      todoList {
-        id
-        completedTodoItemsCount
-        activeTodoItemsCount
+export default class TodoItemsRemovedSubscription extends Subscription<TodoItemsRemovedSubscriptionVariables> {
+  static subscription = graphql`
+    subscription TodoItemsRemovedSubscription(
+      $todoListID: ID!
+    ) {
+      todoItemsRemoved(todoListID: $todoListID) {
+        removedTodoItemIDs
+        todoList {
+          id
+          completedTodoItemsCount
+          activeTodoItemsCount
+        }
       }
     }
-  }
-`
+  `
 
-export default class TodoItemsRemovedSubscription extends Subscription {
-  subscribe = () => {
-    const { environment, variables } = this
+  getSubscriptionConfig() {
+    return {
+      onCompleted: () => { console.log('completed') },
+      onError: (error: Error) => { console.error(error) },
+      updater: (store: RecordSourceSelectorProxy) => {
+        const payload = store.getRootField('todoItemsRemoved')
+        if (!payload) throw new Error('cannot get payload')
+        const removedTodoItemIDs = payload.getValue('removedTodoItemIDs')
+        if (!removedTodoItemIDs) throw new Error('cannot get removedTodoItemIDs')
+        if (!(removedTodoItemIDs instanceof Array)) throw new Error('removedTodoItemIDs is not an array')
+        const todoListProxy = payload.getLinkedRecord('todoList')
+        if (!todoListProxy) throw new Error('cannot get todoList')
 
-    this.disposable = requestSubscription(
-      environment,
-      {
-        subscription,
-        variables,
-        onCompleted: () => { console.log('completed') },
-        onError: (error) => { console.error(error) },
-        updater: (store) => {
-          const payload = store.getRootField('todoItemsRemoved')
-          const removedTodoItemIDs = payload.getValue('removedTodoItemIDs')
-          const todoListProxy = payload.getLinkedRecord('todoList')
-
-          todoItemsRemovedUpdater(store, {
-            todoListProxy,
-            removedTodoItemIDs,
-          })
-        },
+        todoItemsRemovedUpdater(store, {
+          todoListProxy,
+          removedTodoItemIDs,
+        })
       },
-    )
+    }
   }
 }

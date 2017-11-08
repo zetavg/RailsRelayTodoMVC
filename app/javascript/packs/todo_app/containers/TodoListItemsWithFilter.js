@@ -1,16 +1,24 @@
+/* @flow */
+
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { graphql, createRefetchContainer } from 'react-relay'
+import type { RefetchContainerRelayProp } from 'react-relay'
 
 import TodoListItemsWithFilterComponent from '../components/TodoListItemsWithFilter'
 
-class TodoListItemsWithFilterContainer extends Component {
-  static propTypes = {
-    todoList: PropTypes.shape({}).isRequired,
-    relay: PropTypes.shape({
-      refetch: PropTypes.func.isRequired,
-    }).isRequired,
-  }
+type Props = {|
+  todoList: {},
+  relay: RefetchContainerRelayProp,
+|};
+
+type State = {|
+  filter: 'all' | 'active' | 'completed',
+|};
+
+class TodoListItemsWithFilterContainer extends Component<Props, State> {
+  /* eslint-disable react/sort-comp */
+  todoListItems: TodoListItemsWithFilterComponent;
+  /* eslint-enable react/sort-comp */
 
   constructor(props, context) {
     super(props, context)

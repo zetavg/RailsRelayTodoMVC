@@ -1,40 +1,34 @@
-import {
-  requestSubscription,
-  graphql,
-} from 'react-relay'
-import Subscription from './Subscription'
+/* @flow */
 
-const subscription = graphql`
-  subscription TodoItemsUpdatedSubscription(
-    $todoListID: ID!
-  ) {
-    todoItemsUpdated(todoListID: $todoListID) {
-      updatedTodoItems {
-        completed
-        id
-        name
-      }
-      todoList {
-        id
-        completedTodoItemsCount
-        activeTodoItemsCount
+import { graphql } from 'react-relay'
+import Subscription from './_Subscription'
+
+import type { TodoItemsUpdatedSubscriptionVariables } from './__generated__/TodoItemsUpdatedSubscription.graphql'
+
+export default class TodoItemsUpdatedSubscription extends Subscription<TodoItemsUpdatedSubscriptionVariables> {
+  static subscription = graphql`
+    subscription TodoItemsUpdatedSubscription(
+      $todoListID: ID!
+    ) {
+      todoItemsUpdated(todoListID: $todoListID) {
+        updatedTodoItems {
+          completed
+          id
+          name
+        }
+        todoList {
+          id
+          completedTodoItemsCount
+          activeTodoItemsCount
+        }
       }
     }
-  }
-`
+  `
 
-export default class TodoItemsUpdatedSubscription extends Subscription {
-  subscribe = () => {
-    const { environment, variables } = this
-
-    this.disposable = requestSubscription(
-      environment,
-      {
-        subscription,
-        variables,
-        onCompleted: () => { console.log('completed') },
-        onError: (error) => { console.error(error) },
-      },
-    )
+  getSubscriptionConfig() {
+    return {
+      onCompleted: () => { console.log('completed') },
+      onError: (error: Error) => { console.error(error) },
+    }
   }
 }

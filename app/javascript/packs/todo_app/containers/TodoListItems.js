@@ -1,6 +1,8 @@
+/* @flow */
+
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { graphql, createPaginationContainer } from 'react-relay'
+import type { DataID, PaginationContainerRelayProp } from 'react-relay'
 import environment from '../relay/environment'
 
 import TodoListItemsComponent from '../components/TodoListItems'
@@ -15,25 +17,28 @@ import TodoItemsUpdatedSubscription from '../subscriptions/TodoItemsUpdatedSubsc
 import TodoItemRemovedSubscription from '../subscriptions/TodoItemRemovedSubscription'
 import TodoItemsRemovedSubscription from '../subscriptions/TodoItemsRemovedSubscription'
 
-class TodoListItemsContainer extends Component {
-  static propTypes = {
-    todoList: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    }).isRequired,
-    relay: PropTypes.shape({
-      hasMore: PropTypes.func.isRequired,
-      isLoading: PropTypes.func.isRequired,
-      loadMore: PropTypes.func.isRequired,
-      refetchConnection: PropTypes.func.isRequired,
-    }).isRequired,
-  }
+type Props = {|
+  todoList: {
+    id: DataID,
+  },
+  relay: PaginationContainerRelayProp,
+|};
+
+class TodoListItemsContainer extends Component<Props> {
+  /* eslint-disable react/sort-comp */
+  todoItemAddedSubscription: TodoItemAddedSubscription;
+  todoItemUpdatedSubscription: TodoItemUpdatedSubscription;
+  todoItemsUpdatedSubscription: TodoItemsUpdatedSubscription;
+  todoItemRemovedSubscription: TodoItemRemovedSubscription;
+  todoItemsRemovedSubscription: TodoItemsRemovedSubscription;
+  component: TodoListItemsComponent;
+  /* eslint-enable react/sort-comp */
 
   componentWillMount() {
     const subscriptionParams = [environment, {
-      variables: {
-        todoListID: this.props.todoList.id,
-      },
+      todoListID: this.props.todoList.id,
     }]
+
     this.todoItemAddedSubscription = new TodoItemAddedSubscription(...subscriptionParams)
     this.todoItemUpdatedSubscription = new TodoItemUpdatedSubscription(...subscriptionParams)
     this.todoItemsUpdatedSubscription = new TodoItemsUpdatedSubscription(...subscriptionParams)
@@ -55,7 +60,8 @@ class TodoListItemsContainer extends Component {
     if (this.todoItemsRemovedSubscription) this.todoItemsRemovedSubscription.unsubscribe()
   }
 
-  setFilter = (filter) => {
+  setFilter = (filter: 'all' | 'active' | 'completed') => {
+    if (!this.props.relay.refetch) throw new Error('props.relay.refetch is undefined')
     this.props.relay.refetch({ filter })
   }
 

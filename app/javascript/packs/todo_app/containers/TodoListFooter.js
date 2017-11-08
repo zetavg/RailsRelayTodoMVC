@@ -1,13 +1,22 @@
+/* @flow */
+
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { graphql, createFragmentContainer } from 'react-relay'
+import type { DataID } from 'react-relay'
 import environment from '../relay/environment'
 
 import TodoListFooterComponent from '../components/TodoListFooter'
 
 import ClearCompletedTodoItemsMutation from '../mutations/ClearCompletedTodoItemsMutation'
 
-class TodoListFooterContainer extends Component {
+type Props = {|
+  todoList: {
+    id: DataID,
+  },
+|};
+
+class TodoListFooterContainer extends Component<Props> {
   static propTypes = {
     todoList: PropTypes.shape({
       id: PropTypes.string.isRequired,

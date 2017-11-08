@@ -1,3 +1,5 @@
+/* @flow */
+
 import { graphql, createFragmentContainer } from 'react-relay'
 
 import TodoListSelectComponent from '../components/TodoListSelect'

@@ -1,7 +1,7 @@
 /* @flow */
 
 import { commitMutation } from 'react-relay'
-import type { MutationConfig } from 'react-relay'
+import type { CommitMutationConfig } from 'react-relay'
 import type { RelayEnvironment } from 'relay-runtime'
 import validate from 'validate.js'
 import type { Constraints } from 'validate.js'
@@ -55,11 +55,11 @@ export default class Mutation<T = Input> {
    * Mutation configurations
    * @see {@link https://facebook.github.io/relay/docs/mutations.html|Relay Mutations}
    */
-  getMutationConfig(): $Shape<MutationConfig> {
+  getMutationConfig(): $Shape<CommitMutationConfig> {
     return (this.constructor.mutationConfig)
   }
 
-  static mutationConfig = ({}: $Shape<MutationConfig>)
+  static mutationConfig = ({}: $Shape<CommitMutationConfig>)
 
   /**
    * A static function to update the input of a given mutation

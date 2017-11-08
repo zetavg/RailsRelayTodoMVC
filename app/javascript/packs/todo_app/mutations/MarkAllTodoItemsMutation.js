@@ -6,6 +6,7 @@ import Mutation from './_Mutation'
 
 export type MarkAllTodoItemsInput = {|
   todoListID: DataID,
+  completed: boolean,
 |};
 
 export default class MarkAllTodoItemsMutation extends Mutation<MarkAllTodoItemsInput> {
